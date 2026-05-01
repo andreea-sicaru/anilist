@@ -44,6 +44,14 @@ android {
     }
 }
 
+apollo {
+    service("anilist") {
+        packageName.set("com.aissia.anilist.graphql")
+        schemaFiles.from("src/main/graphql/com/aissia/anilist/schema.graphqls")
+        srcDir("src/main/graphql/com/aissia/anilist")
+    }
+}
+
 dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

@@ -1,0 +1,32 @@
+query GetPopularAnime($page: Int, $perPage: Int) {
+  Page(page: $page, perPage: $perPage) {
+    pageInfo {
+      currentPage
+      hasNextPage
+    }
+    media(type: ANIME, format: MOVIE, sort: [POPULARITY_DESC]) {
+      id
+      title {
+        english
+        romaji
+      }
+      coverImage {
+        large
+        extraLarge
+        color
+      }
+      bannerImage
+      averageScore
+      popularity
+      genres
+      description
+      trailer {
+        id
+        site
+        thumbnail
+      }
+      status
+      seasonYear
+    }
+  }
+}

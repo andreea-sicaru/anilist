@@ -1,0 +1,28 @@
+query GetTrendingAnime($page: Int, $perPage: Int) {
+  Page(page: $page, perPage: $perPage) {
+    media(type: ANIME, format: MOVIE, sort: [TRENDING_DESC]) {
+      id
+      title {
+        english
+        romaji
+      }
+      coverImage {
+        large
+        extraLarge
+        color
+      }
+      bannerImage
+      averageScore
+      popularity
+      genres
+      description
+      trailer {
+        id
+        site
+        thumbnail
+      }
+      status
+      seasonYear
+    }
+  }
+}
