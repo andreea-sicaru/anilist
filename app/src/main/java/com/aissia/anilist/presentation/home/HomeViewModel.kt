@@ -2,6 +2,7 @@ package com.aissia.anilist.presentation.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.aissia.anilist.domain.usecase.GetNowShowingAnimeUseCase
 import com.aissia.anilist.domain.usecase.GetPopularAnimeUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
@@ -16,7 +17,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val getPopularAnime: GetPopularAnimeUseCase
+    private val getPopularAnime: GetPopularAnimeUseCase,
+    private val getNowShowingAnime: GetNowShowingAnimeUseCase
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(HomeContract.State())
@@ -34,15 +36,22 @@ class HomeViewModel @Inject constructor(
             is HomeContract.Event.LoadInitialData -> loadInitialData()
             is HomeContract.Event.LoadMorePopular -> loadMorePopular()
             is HomeContract.Event.RetryPopular -> {}
+
+            is HomeContract.Event.RetryTrending -> {}
         }
     }
 
     private fun loadInitialData() {
         viewModelScope.launch {
-            _state.update { it.copy(isLoadingPopular = true) }
+            _state.update { it.copy(isLoadingPopular = true, isLoadingNowShowing = true) }
 
             val popularDeffered = async { getPopularAnime(page = 1) }
+            val nowShowingDeffered = async { getNowShowingAnime(page = 1) }
 
+            nowShowingDeffered.await().fold(
+                onSuccess = { (list, hasNext) ->  _state.update { it.copy(isLoadingNowShowing = false, nowShowingAnime = list, nowShowingError = null) } },
+                onFailure = { e -> _state.update { it.copy(isLoadingNowShowing = false, nowShowingError = e.message) } }
+            )
             popularDeffered.await().fold(onSuccess = { (list, hasNext) ->
                 _state.update {
                     it.copy(
