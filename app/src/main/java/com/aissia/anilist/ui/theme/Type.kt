@@ -15,6 +15,8 @@ val Merriweather = FontFamily(
     Font(R.font.merriweather_regular, FontWeight.Normal),
 )
 
+val Mullish = FontFamily(Font(R.font.mulish_regular, FontWeight.Normal))
+
 // Set of Material typography styles to start with
 val Typography = Typography(
     bodyLarge = TextStyle(
@@ -25,16 +27,29 @@ val Typography = Typography(
         letterSpacing = 0.5.sp
     ),
 
-    //  text = "FilmKu",
-    //            style = MaterialTheme.typography.titleMedium,
-    //            fontWeight = FontWeight.Bold,
-    //            fontFamily = Merriweather,
     titleMedium = TextStyle(
         fontFamily = Merriweather,
         fontWeight = FontWeight.Black,
         fontSize = 16.sp,
-        color = DarkBlue900
-    )
+    ),
+
+    titleSmall = TextStyle(
+        fontFamily = Mullish,
+        fontSize = 14.sp,
+        fontWeight = FontWeight.Bold
+    ),
+
+    labelSmall = TextStyle(
+        fontFamily = Mullish,
+        fontWeight = FontWeight.Normal,
+        fontSize = 10.sp
+    ),
+
+    labelMedium = TextStyle(
+        fontFamily = Mullish,
+        fontWeight = FontWeight.Normal,
+        fontSize = 12.sp
+    ),
 
     /* Other default text styles to override
     titleLarge = TextStyle(

@@ -11,3 +11,7 @@ val PurpleGrey40 = Color(0xFF625b71)
 val Pink40 = Color(0xFF7D5260)
 
 val DarkBlue900 = Color(0xFF110E47)
+
+val LightGray80 = Color(0xFFAAA9B1)
+val LightGray100 = Color(0xFF9C9C9C)
+val GoldStar = Color(0xFFFFC319)
