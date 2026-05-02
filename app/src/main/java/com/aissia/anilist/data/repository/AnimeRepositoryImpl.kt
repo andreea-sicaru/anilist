@@ -75,7 +75,8 @@ class AnimeRepositoryImpl @Inject constructor(
         description = description?.stripHtml(),
         trailer = trailer?.toTrailer(),
         status = status?.rawValue,
-        seasonYear = seasonYear
+        seasonYear = seasonYear,
+        duration = duration
     )
 
     private fun GetAnimeDetailQuery.Media.toAnime() = Anime(

@@ -32,7 +32,7 @@ class HomeViewModel @Inject constructor(
     fun onEvent(event: HomeContract.Event) {
         when (event) {
             is HomeContract.Event.LoadInitialData -> loadInitialData()
-            is HomeContract.Event.LoadMorePopular -> {}
+            is HomeContract.Event.LoadMorePopular -> loadMorePopular()
             is HomeContract.Event.RetryPopular -> {}
         }
     }
@@ -62,4 +62,39 @@ class HomeViewModel @Inject constructor(
             })
         }
     }
+
+    private fun loadMorePopular() {
+        val current = _state.value
+        if (!current.hasMorePopular || current.isPaginatingPopular) return
+        loadPopular(page = current.currentPopularPage + 1, reset = false)
+    }
+
+    private fun loadPopular(page: Int, reset: Boolean) {
+        viewModelScope.launch {
+            _state.update { it.copy(isPaginatingPopular = true, popularError = null) }
+            getPopularAnime(page = page).fold(
+                onSuccess = { (list, hasNext) ->
+                    _state.update { s ->
+                        s.copy(
+                            isPaginatingPopular = false,
+                            isLoadingPopular = false,
+                            popularAnime = if (reset) list else s.popularAnime + list,
+                            hasMorePopular = hasNext,
+                            currentPopularPage = page,
+                            popularError = null
+                        )
+                    }
+                },
+                onFailure = { e ->
+                    _state.update { it.copy(isPaginatingPopular = false, popularError = e.message) }
+                    sendEffect(HomeContract.Effect.ShowError(e.message ?: "Unknown error"))
+                }
+            )
+        }
+    }
+
+    private fun sendEffect(effect: HomeContract.Effect) {
+        viewModelScope.launch { _effect.send(effect) }
+    }
+
 }

@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.aissia.anilist.R
 import com.aissia.anilist.domain.model.Anime
+import com.aissia.anilist.presentation.toFormattedDuration
 import com.aissia.anilist.ui.theme.Dimens
 
 @Composable
@@ -67,21 +68,23 @@ fun PopularAnimeCard(anime: Anime, modifier: Modifier = Modifier) {
                     GenreChip(genre)
                 }
             }
-            Row(
-                modifier = Modifier.padding(top = 8.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(4.dp)
-            ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_clock),
-                    contentDescription = null,
-                    modifier = Modifier.size(14.dp)
-                )
-                Text(
-                    text = "1h 47m", // TODO: wire to model field when available
-                    style = MaterialTheme.typography.labelMedium,
-                    color = Color.Black
-                )
+            anime.duration?.let { minutes ->
+                Row(
+                    modifier = Modifier.padding(top = 8.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_clock),
+                        contentDescription = null,
+                        modifier = Modifier.size(14.dp)
+                    )
+                    Text(
+                        text = minutes.toFormattedDuration(),
+                        style = MaterialTheme.typography.labelMedium,
+                        color = Color.Black
+                    )
+                }
             }
         }
     }

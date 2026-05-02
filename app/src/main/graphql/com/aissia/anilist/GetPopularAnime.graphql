@@ -27,6 +27,7 @@ query GetPopularAnime($page: Int, $perPage: Int) {
       }
       status
       seasonYear
+      duration
     }
   }
 }
