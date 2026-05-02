@@ -22,7 +22,7 @@ fun AppNavHost(navController: NavHostController = rememberNavController()) {
         composable(route = Screen.Detail.route, arguments = listOf(navArgument("animeId") {
             type = NavType.IntType
         })) {
-            DetailScreen()
+            DetailScreen(onBack = { navController.popBackStack() })
         }
     }
 }
