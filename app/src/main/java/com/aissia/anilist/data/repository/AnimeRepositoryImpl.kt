@@ -1,6 +1,7 @@
 package com.aissia.anilist.data.repository
 
 import com.aissia.anilist.domain.model.Anime
+import com.aissia.anilist.domain.model.Character
 import com.aissia.anilist.domain.model.Trailer
 import com.aissia.anilist.domain.repository.AnimeRepository
 import com.aissia.anilist.graphql.GetAnimeDetailQuery
@@ -96,7 +97,16 @@ class AnimeRepositoryImpl @Inject constructor(
         trailer = trailer?.toTrailer(),
         status = status?.rawValue,
         seasonYear = seasonYear,
-        countryOfOrigin = countryOfOrigin
+        countryOfOrigin = countryOfOrigin,
+        characters = characters?.edges?.filterNotNull()?.mapNotNull { edge ->
+            val node = edge.node ?: return@mapNotNull null
+            Character(
+                id = node.id,
+                name = node.name?.full ?: return@mapNotNull null,
+                imageUrl = node.image?.large,
+                role = edge.role?.rawValue,
+            )
+        } ?: emptyList()
     )
 
     private fun GetPopularAnimeQuery.Trailer.toTrailer() =
