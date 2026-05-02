@@ -22,6 +22,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.aissia.anilist.domain.model.Anime
+import com.aissia.anilist.presentation.common.RatingRow
 import com.aissia.anilist.ui.theme.Dimens
 
 @Composable

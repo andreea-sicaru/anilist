@@ -1,4 +1,4 @@
-package com.aissia.anilist.presentation.home.components
+package com.aissia.anilist.presentation.common
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -16,8 +16,9 @@ import com.aissia.anilist.ui.theme.GoldStar
 import com.aissia.anilist.ui.theme.LightGray100
 
 @Composable
-fun RatingRow(score: Double) {
+fun RatingRow(score: Double, modifier: Modifier = Modifier) {
     Row(
+        modifier = modifier,
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(4.dp)
     ) {

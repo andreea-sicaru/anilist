@@ -95,7 +95,8 @@ class AnimeRepositoryImpl @Inject constructor(
         description = description?.stripHtml(),
         trailer = trailer?.toTrailer(),
         status = status?.rawValue,
-        seasonYear = seasonYear
+        seasonYear = seasonYear,
+        countryOfOrigin = countryOfOrigin
     )
 
     private fun GetPopularAnimeQuery.Trailer.toTrailer() =

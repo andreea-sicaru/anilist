@@ -1,4 +1,4 @@
-package com.aissia.anilist.presentation.home.components
+package com.aissia.anilist.presentation.common
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box

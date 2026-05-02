@@ -22,5 +22,6 @@ query GetAnimeDetail($id: Int) {
     }
     status
     seasonYear
+    countryOfOrigin
   }
 }

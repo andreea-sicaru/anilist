@@ -49,6 +49,7 @@ apollo {
         packageName.set("com.aissia.anilist.graphql")
         schemaFiles.from("src/main/graphql/com/aissia/anilist/schema.graphqls")
         srcDir("src/main/graphql/com/aissia/anilist")
+        mapScalar("CountryCode", "kotlin.String")
     }
 }
 
