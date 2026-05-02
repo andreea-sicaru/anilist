@@ -21,6 +21,7 @@ object HomeContract {
 
     sealed class Event {
         object LoadInitialData : Event()
+        data class AnimeClicked(val animeId: Int) : Event()
 
         // Now Showing Section
         object RetryTrending : Event()
@@ -31,6 +32,7 @@ object HomeContract {
     }
 
     sealed class Effect {
-        data class ShowError(val message: String): Effect()
+        data class NavigateToDetail(val animeId: Int) : Effect()
+        data class ShowError(val message: String) : Effect()
     }
 }

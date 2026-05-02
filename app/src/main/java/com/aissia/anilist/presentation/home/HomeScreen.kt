@@ -35,7 +35,7 @@ import com.aissia.anilist.ui.theme.ScreenBackgroundLeft
 import com.aissia.anilist.ui.theme.ScreenBackgroundRight
 
 @Composable
-fun HomeScreen(viewModel: HomeViewModel = hiltViewModel()) {
+fun HomeScreen(onAnimeClick: (Int) -> Unit, viewModel: HomeViewModel = hiltViewModel()) {
 
     val state by viewModel.state.collectAsStateWithLifecycle()
     val listState = rememberLazyListState()
@@ -43,6 +43,7 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel()) {
     LaunchedEffect(Unit) {
         viewModel.effect.collect { effect ->
             when (effect) {
+                is HomeContract.Effect.NavigateToDetail -> onAnimeClick(effect.animeId)
                 is HomeContract.Effect.ShowError -> {}
             }
         }
@@ -60,11 +61,15 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel()) {
         if (shouldLoadMore) viewModel.onEvent(HomeContract.Event.LoadMorePopular)
     }
 
-    HomeScreenContents(state, listState)
+    HomeScreenContents(
+        state = state,
+        listState = listState,
+        onAnimeClick = { id -> viewModel.onEvent(HomeContract.Event.AnimeClicked(id)) }
+    )
 }
 
 @Composable
-fun HomeScreenContents(state: HomeContract.State, listState: LazyListState) {
+fun HomeScreenContents(state: HomeContract.State, listState: LazyListState, onAnimeClick: (Int) -> Unit) {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -104,7 +109,7 @@ fun HomeScreenContents(state: HomeContract.State, listState: LazyListState) {
                 if (state.isLoadingNowShowing) {
                     item { LoadingIndicator() }
                 } else {
-                    item { NowShowingSection(animes = state.nowShowingAnime) }
+                    item { NowShowingSection(animes = state.nowShowingAnime, onAnimeClick = onAnimeClick) }
                 }
 
                 item { Spacer(modifier = Modifier.height(Dimens.SpacingMedium)) }
@@ -123,7 +128,7 @@ fun HomeScreenContents(state: HomeContract.State, listState: LazyListState) {
                     item { LoadingIndicator() }
                 } else {
                     items(state.popularAnime) { anime ->
-                        PopularAnimeCard(anime = anime)
+                        PopularAnimeCard(anime = anime, onAnimeClick = onAnimeClick)
                     }
 
                     if (state.isPaginatingPopular) {

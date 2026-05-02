@@ -34,9 +34,9 @@ class HomeViewModel @Inject constructor(
     fun onEvent(event: HomeContract.Event) {
         when (event) {
             is HomeContract.Event.LoadInitialData -> loadInitialData()
+            is HomeContract.Event.AnimeClicked -> sendEffect(HomeContract.Effect.NavigateToDetail(event.animeId))
             is HomeContract.Event.LoadMorePopular -> loadMorePopular()
             is HomeContract.Event.RetryPopular -> {}
-
             is HomeContract.Event.RetryTrending -> {}
         }
     }

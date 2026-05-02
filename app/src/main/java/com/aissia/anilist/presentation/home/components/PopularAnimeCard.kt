@@ -31,11 +31,11 @@ import com.aissia.anilist.presentation.toFormattedDuration
 import com.aissia.anilist.ui.theme.Dimens
 
 @Composable
-fun PopularAnimeCard(anime: Anime, modifier: Modifier = Modifier) {
+fun PopularAnimeCard(anime: Anime, onAnimeClick: (Int) -> Unit, modifier: Modifier = Modifier) {
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .clickable(onClick = {})
+            .clickable { onAnimeClick(anime.id) }
             .padding(horizontal = Dimens.PaddingLarge, vertical = 8.dp)
     ) {
         AsyncImage(
