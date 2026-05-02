@@ -13,5 +13,6 @@ data class Anime(
     val description: String?,
     val trailer: Trailer?,
     val status: String?,
-    val seasonYear: Int?
+    val seasonYear: Int?,
+    val duration: Int? = null
 )
