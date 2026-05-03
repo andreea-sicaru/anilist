@@ -4,7 +4,7 @@ query GetPopularAnime($page: Int, $perPage: Int) {
       currentPage
       hasNextPage
     }
-    media(type: ANIME, format: MOVIE, sort: [POPULARITY_DESC]) {
+    media(type: ANIME, sort: [POPULARITY_DESC]) {
       id
       title {
         english

@@ -4,7 +4,7 @@ query GetNowShowing($page: Int, $perPage: Int) {
       hasNextPage
       currentPage
     }
-    media(type: ANIME, format: MOVIE, status: RELEASING, sort: [TRENDING_DESC]) {
+    media(type: ANIME, status: RELEASING, sort: [TRENDING_DESC]) {
       id
       title {
         english

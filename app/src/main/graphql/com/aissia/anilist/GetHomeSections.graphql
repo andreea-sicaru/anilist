@@ -1,6 +1,6 @@
 query GetHomeSections {
   nowShowing: Page(page: 1, perPage: 10) {
-    media(type: ANIME, format: MOVIE, status: RELEASING, sort: [TRENDING_DESC]) {
+    media(type: ANIME, status: RELEASING, sort: [TRENDING_DESC]) {
       id
       title {
         english
@@ -17,7 +17,7 @@ query GetHomeSections {
     }
   }
   popular: Page(page: 1, perPage: 10) {
-    media(type: ANIME, format: MOVIE, sort: [POPULARITY_DESC]) {
+    media(type: ANIME, sort: [POPULARITY_DESC]) {
       id
       title {
         english
