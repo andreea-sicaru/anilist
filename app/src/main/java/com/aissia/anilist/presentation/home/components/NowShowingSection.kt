@@ -21,12 +21,12 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import com.aissia.anilist.domain.model.Anime
+import com.aissia.anilist.domain.model.AnimePreview
 import com.aissia.anilist.presentation.common.RatingRow
 import com.aissia.anilist.presentation.theme.Dimens
 
 @Composable
-fun NowShowingSection(animes: List<Anime>, onAnimeClick: (Int) -> Unit, modifier: Modifier = Modifier) {
+fun NowShowingSection(animes: List<AnimePreview>, onAnimeClick: (Int) -> Unit, modifier: Modifier = Modifier) {
     Column(modifier = modifier) {
         LazyRow(
             contentPadding = PaddingValues(horizontal = Dimens.PaddingLarge),
@@ -40,7 +40,7 @@ fun NowShowingSection(animes: List<Anime>, onAnimeClick: (Int) -> Unit, modifier
 }
 
 @Composable
-fun NowShowingCard(anime: Anime, onClick: () -> Unit, modifier: Modifier = Modifier) {
+fun NowShowingCard(anime: AnimePreview, onClick: () -> Unit, modifier: Modifier = Modifier) {
     Column(
         modifier = modifier.width(Dimens.NowShowingCardWidth),
         verticalArrangement = Arrangement.spacedBy(Dimens.SpacingSmall)
