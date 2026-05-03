@@ -2,7 +2,7 @@ package com.aissia.anilist.presentation.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.aissia.anilist.domain.usecase.GetHomeSectionsUseCase
+import com.aissia.anilist.domain.repository.AnimeRepository
 import com.aissia.anilist.presentation.UiState
 import com.aissia.anilist.presentation.toErrorMessage
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,7 +17,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val getSectionsData: GetHomeSectionsUseCase,
+    private val repository: AnimeRepository,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(HomeContract.State())
@@ -41,7 +41,7 @@ class HomeViewModel @Inject constructor(
     private fun loadHomeData() {
         viewModelScope.launch {
             _state.update { it.copy(homeSections = UiState.Loading) }
-            getSectionsData().fold(
+            repository.getHomeSections().fold(
                 onSuccess = { data ->
                     _state.update { it.copy(homeSections = UiState.Success(data)) }
                 },

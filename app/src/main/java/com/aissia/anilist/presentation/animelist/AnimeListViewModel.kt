@@ -6,8 +6,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.aissia.anilist.domain.model.AnimePreview
 import com.aissia.anilist.domain.model.PaginatedResult
-import com.aissia.anilist.domain.usecase.GetNowShowingAnimeUseCase
-import com.aissia.anilist.domain.usecase.GetPopularAnimeUseCase
+import com.aissia.anilist.domain.repository.AnimeRepository
 import com.aissia.anilist.presentation.UiState
 import com.aissia.anilist.presentation.navigation.AnimeListRoute
 import com.aissia.anilist.presentation.toErrorMessage
@@ -23,8 +22,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AnimeListViewModel @Inject constructor(
-    private val getPopularAnime: GetPopularAnimeUseCase,
-    private val getNowShowingAnime: GetNowShowingAnimeUseCase,
+    private val repository: AnimeRepository,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
@@ -96,8 +94,8 @@ class AnimeListViewModel @Inject constructor(
     }
 
     private suspend fun fetchPage(page: Int): Result<PaginatedResult<AnimePreview>> = when (listType) {
-        AnimeListType.NOW_SHOWING -> getNowShowingAnime(page)
-        AnimeListType.POPULAR -> getPopularAnime(page)
+        AnimeListType.NOW_SHOWING -> repository.getNowShowingAnime(page, perPage = 20)
+        AnimeListType.POPULAR -> repository.getPopularAnime(page, perPage = 20)
     }
 
     private fun sendEffect(effect: AnimeListContract.Effect) {

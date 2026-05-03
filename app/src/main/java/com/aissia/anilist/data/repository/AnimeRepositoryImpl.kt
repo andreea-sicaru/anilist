@@ -23,7 +23,7 @@ class AnimeRepositoryImpl @Inject constructor(
     private val apolloClient: ApolloClient
 ) : AnimeRepository {
 
-    override suspend fun getHomeData(): Result<HomeSections> = runCatching {
+    override suspend fun getHomeSections(): Result<HomeSections> = runCatching {
         val response = apolloClient.query(GetHomeSectionsQuery()).execute()
         response.exception?.let { throw it }
         HomeSections(

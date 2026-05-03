@@ -4,7 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
-import com.aissia.anilist.domain.usecase.GetAnimeDetailUseCase
+import com.aissia.anilist.domain.repository.AnimeRepository
 import com.aissia.anilist.presentation.navigation.DetailRoute
 import com.aissia.anilist.presentation.toErrorMessage
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,8 +19,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DetailViewModel @Inject constructor(
-    private val getAnimeDetail: GetAnimeDetailUseCase,
-    savedStateHandle: SavedStateHandle
+    private val repository: AnimeRepository,
+    savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
     private val animeId: Int = savedStateHandle.toRoute<DetailRoute>().animeId
@@ -46,7 +46,7 @@ class DetailViewModel @Inject constructor(
     private fun loadDetail() {
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true, error = null) }
-            getAnimeDetail(animeId).fold(
+            repository.getAnimeDetail(animeId).fold(
                 onSuccess = { anime -> _state.update { it.copy(isLoading = false, anime = anime) } },
                 onFailure = { e ->
                     _state.update { it.copy(isLoading = false, error = e.toErrorMessage()) }
