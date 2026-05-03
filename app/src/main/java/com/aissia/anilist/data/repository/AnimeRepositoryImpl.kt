@@ -2,8 +2,10 @@ package com.aissia.anilist.data.repository
 
 import com.aissia.anilist.domain.model.Anime
 import com.aissia.anilist.domain.model.Character
+import com.aissia.anilist.domain.model.MediaStatus
 import com.aissia.anilist.domain.model.PaginatedResult
 import com.aissia.anilist.domain.model.Trailer
+import com.aissia.anilist.graphql.type.MediaStatus as GraphQlMediaStatus
 import com.aissia.anilist.domain.repository.AnimeRepository
 import com.aissia.anilist.graphql.GetAnimeDetailQuery
 import com.aissia.anilist.graphql.GetNowShowingQuery
@@ -68,7 +70,7 @@ class AnimeRepositoryImpl @Inject constructor(
         genres = genres?.filterNotNull() ?: emptyList(),
         description = description?.stripHtml(),
         trailer = trailer?.toTrailer(),
-        status = status?.rawValue,
+        status = status?.toDomainStatus(),
         seasonYear = seasonYear,
         duration = duration
     )
@@ -85,7 +87,7 @@ class AnimeRepositoryImpl @Inject constructor(
         genres = genres?.filterNotNull() ?: emptyList(),
         description = description?.stripHtml(),
         trailer = trailer?.toTrailer(),
-        status = status?.rawValue,
+        status = status?.toDomainStatus(),
         seasonYear = seasonYear
     )
 
@@ -101,7 +103,7 @@ class AnimeRepositoryImpl @Inject constructor(
         genres = genres?.filterNotNull() ?: emptyList(),
         description = description?.stripHtml(),
         trailer = trailer?.toTrailer(),
-        status = status?.rawValue,
+        status = status?.toDomainStatus(),
         seasonYear = seasonYear,
         countryOfOrigin = countryOfOrigin,
         characters = characters?.edges?.filterNotNull()?.mapNotNull { edge ->
@@ -125,4 +127,13 @@ class AnimeRepositoryImpl @Inject constructor(
         Trailer(id = id ?: "", site = site ?: "youtube", thumbnail = thumbnail)
 
     private fun String.stripHtml(): String = replace(Regex("<[^>]++>"), "").trim()
+
+    private fun GraphQlMediaStatus.toDomainStatus(): MediaStatus = when (this) {
+        GraphQlMediaStatus.FINISHED -> MediaStatus.FINISHED
+        GraphQlMediaStatus.RELEASING -> MediaStatus.RELEASING
+        GraphQlMediaStatus.NOT_YET_RELEASED -> MediaStatus.NOT_YET_RELEASED
+        GraphQlMediaStatus.CANCELLED -> MediaStatus.CANCELLED
+        GraphQlMediaStatus.HIATUS -> MediaStatus.HIATUS
+        GraphQlMediaStatus.UNKNOWN__ -> MediaStatus.UNKNOWN
+    }
 }
