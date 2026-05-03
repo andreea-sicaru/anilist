@@ -1,10 +1,9 @@
-package com.aissia.anilist.presentation.home
+package com.aissia.anilist.presentation.detail
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aissia.anilist.domain.usecase.GetAnimeDetailUseCase
-import com.aissia.anilist.presentation.detail.DetailContract
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,7 +16,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DetailViewModel @Inject constructor(
-    val getAnimeDetail: GetAnimeDetailUseCase,
+    private val getAnimeDetail: GetAnimeDetailUseCase,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
