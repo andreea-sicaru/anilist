@@ -15,18 +15,8 @@ query GetPopularAnime($page: Int, $perPage: Int) {
         extraLarge
         color
       }
-      bannerImage
       averageScore
-      popularity
       genres
-      description
-      trailer {
-        id
-        site
-        thumbnail
-      }
-      status
-      seasonYear
       duration
     }
   }

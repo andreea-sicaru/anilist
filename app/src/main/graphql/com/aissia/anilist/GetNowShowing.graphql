@@ -1,34 +1,23 @@
 query GetNowShowing($page: Int, $perPage: Int) {
-    Page(page: $page, perPage: $perPage) {
-        pageInfo {
-            hasNextPage
-            currentPage
-            lastPage
-        }
-        media(type: ANIME, status: RELEASING, sort: [TRENDING_DESC]) {
-            id
-            title {
-                romaji
-                english
-                userPreferred
-            }
-            coverImage {
-                extraLarge
-                large
-                color
-            }
-            bannerImage
-            genres
-            averageScore
-            popularity
-            status
-            seasonYear
-            description
-            trailer {
-                id
-                site
-                thumbnail
-            }
-        }
+  Page(page: $page, perPage: $perPage) {
+    pageInfo {
+      hasNextPage
+      currentPage
     }
+    media(type: ANIME, format: MOVIE, status: RELEASING, sort: [TRENDING_DESC]) {
+      id
+      title {
+        english
+        romaji
+      }
+      coverImage {
+        large
+        extraLarge
+        color
+      }
+      averageScore
+      genres
+      duration
+    }
+  }
 }
