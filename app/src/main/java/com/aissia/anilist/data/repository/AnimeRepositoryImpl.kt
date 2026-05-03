@@ -24,6 +24,7 @@ class AnimeRepositoryImpl @Inject constructor(
                 perPage = Optional.Present(perPage)
             )
         ).execute()
+        response.exception?.let { throw it }
         val pageData = response.data?.Page
         val list = pageData?.media?.filterNotNull()?.map { it.toAnime() } ?: emptyList()
         val hasNextPage = pageData?.pageInfo?.hasNextPage ?: false
@@ -37,6 +38,7 @@ class AnimeRepositoryImpl @Inject constructor(
                 perPage = Optional.Present(perPage)
             )
         ).execute()
+        response.exception?.let { throw it }
         val pageData = response.data?.Page
         val list = pageData?.media?.filterNotNull()?.map { it.toAnime() } ?: emptyList()
         val hasNextPage = pageData?.pageInfo?.hasNextPage ?: false
@@ -47,6 +49,7 @@ class AnimeRepositoryImpl @Inject constructor(
         val response = apolloClient.query(
             GetAnimeDetailQuery(id = Optional.Present(id))
         ).execute()
+        response.exception?.let { throw it }
         response.data?.Media?.toAnime() ?: error("Anime not found")
     }
 

@@ -4,6 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aissia.anilist.domain.usecase.GetAnimeDetailUseCase
+import com.aissia.anilist.presentation.toErrorMessage
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -46,8 +47,7 @@ class DetailViewModel @Inject constructor(
             getAnimeDetail(animeId).fold(
                 onSuccess = { anime -> _state.update { it.copy(isLoading = false, anime = anime) } },
                 onFailure = { e ->
-                    _state.update { it.copy(isLoading = false, error = e.message) }
-                    sendEffect(DetailContract.Effect.ShowError(e.message ?: "Unknown error"))
+                    _state.update { it.copy(isLoading = false, error = e.toErrorMessage()) }
                 }
             )
         }

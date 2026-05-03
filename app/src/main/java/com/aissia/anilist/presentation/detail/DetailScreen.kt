@@ -1,16 +1,14 @@
 package com.aissia.anilist.presentation.detail
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
@@ -25,6 +23,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.outlined.BookmarkBorder
 import androidx.compose.material.icons.outlined.MoreHoriz
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -53,10 +52,10 @@ import coil.compose.AsyncImage
 import com.aissia.anilist.domain.model.Anime
 import com.aissia.anilist.domain.model.Character
 import com.aissia.anilist.domain.model.Trailer
+import com.aissia.anilist.presentation.common.ErrorView
 import com.aissia.anilist.presentation.common.GenreChipList
 import com.aissia.anilist.presentation.common.RatingRow
 import com.aissia.anilist.presentation.detail.components.TrailerPlayer
-import com.aissia.anilist.presentation.detail.DetailViewModel
 import com.aissia.anilist.presentation.home.components.SectionHeader
 import com.aissia.anilist.presentation.toFormattedDuration
 import com.aissia.anilist.presentation.toLanguage
@@ -76,14 +75,14 @@ fun DetailScreen(
         viewModel.effect.collect { effect ->
             when (effect) {
                 is DetailContract.Effect.NavigateBack -> onBack()
-                is DetailContract.Effect.ShowError -> {}
             }
         }
     }
 
     DetailScreenContent(
         state = state,
-        onBack = { viewModel.onEvent(DetailContract.Event.OnBackClicked) }
+        onBack = { viewModel.onEvent(DetailContract.Event.OnBackClicked) },
+        onRetry = { viewModel.onEvent(DetailContract.Event.RetryLoad) },
     )
 }
 
@@ -91,28 +90,43 @@ fun DetailScreen(
 fun DetailScreenContent(
     state: DetailContract.State,
     onBack: () -> Unit,
+    onRetry: () -> Unit = {},
 ) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.White)
-            .verticalScroll(rememberScrollState())
-            .navigationBarsPadding()
-    ) {
-        BannerSection(
-            bannerUrl = state.anime?.bannerImage ?: "",
-            trailer = state.anime?.trailer,
-            onBack = onBack
-        )
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .offset(y = (-24).dp)
-                .clip(RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp))
-                .background(Color.White)
-                .padding(horizontal = 24.dp, vertical = 24.dp)
+    when {
+        state.isLoading -> Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) { CircularProgressIndicator() }
+
+        state.error != null -> Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
         ) {
-            DescriptionSection(state.anime)
+            ErrorView(message = state.error, onRetry = onRetry)
+        }
+
+        else -> Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.White)
+                .verticalScroll(rememberScrollState())
+                .navigationBarsPadding()
+        ) {
+            BannerSection(
+                bannerUrl = state.anime?.bannerImage ?: "",
+                trailer = state.anime?.trailer,
+                onBack = onBack
+            )
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .offset(y = (-24).dp)
+                    .clip(RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp))
+                    .background(Color.White)
+                    .padding(horizontal = 24.dp, vertical = 24.dp)
+            ) {
+                DescriptionSection(state.anime)
+            }
         }
     }
 }
@@ -357,7 +371,8 @@ private fun PlayButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true,
+@Preview(
+    showBackground = true, showSystemUi = true,
     device = "spec:width=375dp,height=812dp,dpi=460" // to match Figma
 )
 @Composable
