@@ -56,7 +56,7 @@ import com.aissia.anilist.domain.model.Trailer
 import com.aissia.anilist.presentation.common.GenreChipList
 import com.aissia.anilist.presentation.common.RatingRow
 import com.aissia.anilist.presentation.detail.components.TrailerPlayer
-import com.aissia.anilist.presentation.home.DetailViewModel
+import com.aissia.anilist.presentation.detail.DetailViewModel
 import com.aissia.anilist.presentation.home.components.SectionHeader
 import com.aissia.anilist.presentation.toFormattedDuration
 import com.aissia.anilist.presentation.toLanguage
@@ -187,7 +187,7 @@ fun MetaRow(
         verticalAlignment = Alignment.CenterVertically,
     ) {
         val duration = anime.duration?.toFormattedDuration()
-        Meta("Length", duration ?: "Unkown", modifier.weight(1f))
+        Meta("Length", duration ?: "Unknown", modifier.weight(1f))
 
         Meta("Language", anime.countryOfOrigin.toLanguage(), modifier.weight(1f))
         Meta("Rating", "PG-13", modifier.weight(1f))
