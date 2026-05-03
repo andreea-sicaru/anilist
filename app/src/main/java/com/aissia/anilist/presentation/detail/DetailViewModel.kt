@@ -3,7 +3,9 @@ package com.aissia.anilist.presentation.detail
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.toRoute
 import com.aissia.anilist.domain.usecase.GetAnimeDetailUseCase
+import com.aissia.anilist.presentation.navigation.DetailRoute
 import com.aissia.anilist.presentation.toErrorMessage
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -21,7 +23,7 @@ class DetailViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-    private val animeId: Int = checkNotNull(savedStateHandle["animeId"])
+    private val animeId: Int = savedStateHandle.toRoute<DetailRoute>().animeId
 
     private val _state = MutableStateFlow(DetailContract.State())
     val state: StateFlow<DetailContract.State> = _state.asStateFlow()
