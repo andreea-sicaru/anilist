@@ -24,14 +24,14 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.aissia.anilist.R
-import com.aissia.anilist.domain.model.Anime
+import com.aissia.anilist.domain.model.AnimePreview
 import com.aissia.anilist.presentation.common.GenreChipList
 import com.aissia.anilist.presentation.common.RatingRow
 import com.aissia.anilist.presentation.toFormattedDuration
 import com.aissia.anilist.presentation.theme.Dimens
 
 @Composable
-fun PopularAnimeCard(anime: Anime, onAnimeClick: (Int) -> Unit, modifier: Modifier = Modifier) {
+fun PopularAnimeCard(anime: AnimePreview, onAnimeClick: (Int) -> Unit, modifier: Modifier = Modifier) {
     Row(
         modifier = modifier
             .fillMaxWidth()

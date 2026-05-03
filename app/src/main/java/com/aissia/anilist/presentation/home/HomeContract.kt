@@ -1,28 +1,24 @@
 package com.aissia.anilist.presentation.home
 
-import com.aissia.anilist.domain.model.Anime
+import com.aissia.anilist.domain.model.HomeSections
 import com.aissia.anilist.presentation.UiState
+import com.aissia.anilist.presentation.animelist.AnimeListType
 
 object HomeContract {
 
     data class State(
-        val nowShowing: UiState<List<Anime>> = UiState.Loading,
-        val popular: UiState<List<Anime>> = UiState.Loading,
-        val currentPopularPage: Int = 1,
-        val hasMorePopular: Boolean = true,
-        val isPaginatingPopular: Boolean = false,
+        val homeSections: UiState<HomeSections> = UiState.Loading,
     )
 
     sealed class Event {
-        object LoadInitialData : Event()
         data class AnimeClicked(val animeId: Int) : Event()
-        object RetryTrending : Event()
-        object LoadMorePopular : Event()
-        object RetryPopular : Event()
+        data class SeeMore(val listType: AnimeListType) : Event()
+        object Retry : Event()
     }
 
     sealed class Effect {
         data class NavigateToDetail(val animeId: Int) : Effect()
+        data class NavigateToList(val listType: AnimeListType) : Effect()
         data class ShowError(val message: String) : Effect()
     }
 }

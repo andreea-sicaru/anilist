@@ -19,7 +19,7 @@ import com.aissia.anilist.presentation.theme.DarkBlue900
 import com.aissia.anilist.presentation.theme.LightGray80
 
 @Composable
-fun SectionHeader(title: String, modifier: Modifier = Modifier) {
+fun SectionHeader(title: String, onSeeMore: (() -> Unit)? = null, modifier: Modifier = Modifier) {
     Row(
         modifier = modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -30,18 +30,20 @@ fun SectionHeader(title: String, modifier: Modifier = Modifier) {
             style = MaterialTheme.typography.titleMedium,
             color = DarkBlue900
         )
-        OutlinedButton(
-            onClick = {},
-            modifier = Modifier.height(21.dp),
-            contentPadding = PaddingValues(horizontal = 12.dp, vertical = 0.dp),
-            border = BorderStroke(1.dp, Color.LightGray.copy(alpha = 0.5f)),
-            shape = RoundedCornerShape(16.dp)
-        ) {
-            Text(
-                text = "See more",
-                style = MaterialTheme.typography.labelSmall,
-                color = LightGray80
-            )
+        if (onSeeMore != null) {
+            OutlinedButton(
+                onClick = onSeeMore,
+                modifier = Modifier.height(21.dp),
+                contentPadding = PaddingValues(horizontal = 12.dp, vertical = 0.dp),
+                border = BorderStroke(1.dp, Color.LightGray.copy(alpha = 0.5f)),
+                shape = RoundedCornerShape(16.dp)
+            ) {
+                Text(
+                    text = "See more",
+                    style = MaterialTheme.typography.labelSmall,
+                    color = LightGray80
+                )
+            }
         }
     }
 }

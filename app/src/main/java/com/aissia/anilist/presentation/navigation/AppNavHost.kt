@@ -5,6 +5,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.aissia.anilist.presentation.animelist.AnimeListScreen
 import com.aissia.anilist.presentation.detail.DetailScreen
 import com.aissia.anilist.presentation.home.HomeScreen
 
@@ -12,12 +13,19 @@ import com.aissia.anilist.presentation.home.HomeScreen
 fun AppNavHost(navController: NavHostController = rememberNavController()) {
     NavHost(navController = navController, startDestination = HomeRoute) {
         composable<HomeRoute> {
-            HomeScreen(onAnimeClick = { animeId ->
-                navController.navigate(DetailRoute(animeId))
-            })
+            HomeScreen(
+                onAnimeClick = { navController.navigate(DetailRoute(it)) },
+                onSeeMore = { navController.navigate(AnimeListRoute(it)) },
+            )
         }
         composable<DetailRoute> {
             DetailScreen(onBack = { navController.popBackStack() })
+        }
+        composable<AnimeListRoute> {
+            AnimeListScreen(
+                onBack = { navController.popBackStack() },
+                onAnimeClick = { navController.navigate(DetailRoute(it)) },
+            )
         }
     }
 }
