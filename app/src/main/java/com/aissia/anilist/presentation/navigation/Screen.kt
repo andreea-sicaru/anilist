@@ -1,10 +1,9 @@
 package com.aissia.anilist.presentation.navigation
 
+import kotlinx.serialization.Serializable
 
-sealed class Screen(val route: String) {
-    object Home : Screen("home")
-    object Detail : Screen("detail/{animeId}") {
-        fun createRoute(animeId: Int) = "detail/$animeId"
-    }
+@Serializable
+object HomeRoute
 
-}
+@Serializable
+data class DetailRoute(val animeId: Int)

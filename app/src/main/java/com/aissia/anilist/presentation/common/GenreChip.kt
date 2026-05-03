@@ -13,8 +13,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.aissia.anilist.ui.theme.ChipBackground
-import com.aissia.anilist.ui.theme.ChipText
+import com.aissia.anilist.presentation.theme.ChipBackground
+import com.aissia.anilist.presentation.theme.ChipText
 
 @Composable
 fun GenreChip(genre: String) {

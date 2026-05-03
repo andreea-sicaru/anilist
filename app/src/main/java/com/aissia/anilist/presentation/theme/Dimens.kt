@@ -1,4 +1,4 @@
-package com.aissia.anilist.ui.theme
+package com.aissia.anilist.presentation.theme
 
 import androidx.compose.ui.unit.dp
 

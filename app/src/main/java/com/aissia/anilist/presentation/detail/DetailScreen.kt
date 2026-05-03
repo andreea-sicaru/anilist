@@ -51,6 +51,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import com.aissia.anilist.domain.model.Anime
 import com.aissia.anilist.domain.model.Character
+import com.aissia.anilist.domain.model.MediaStatus
 import com.aissia.anilist.domain.model.Trailer
 import com.aissia.anilist.presentation.common.ErrorView
 import com.aissia.anilist.presentation.common.GenreChipList
@@ -59,10 +60,10 @@ import com.aissia.anilist.presentation.detail.components.TrailerPlayer
 import com.aissia.anilist.presentation.home.components.SectionHeader
 import com.aissia.anilist.presentation.toFormattedDuration
 import com.aissia.anilist.presentation.toLanguage
-import com.aissia.anilist.ui.theme.AnilistTheme
-import com.aissia.anilist.ui.theme.DarkBlue900
-import com.aissia.anilist.ui.theme.Dimens
-import com.aissia.anilist.ui.theme.LightGray100
+import com.aissia.anilist.presentation.theme.AnilistTheme
+import com.aissia.anilist.presentation.theme.DarkBlue900
+import com.aissia.anilist.presentation.theme.Dimens
+import com.aissia.anilist.presentation.theme.LightGray100
 
 @Composable
 fun DetailScreen(
@@ -391,7 +392,7 @@ private fun DetailScreenPreview() {
                     averageScore = 91.0,
                     popularity = 50000,
                     description = "With Spider-Man's identity now revealed, Peter asks Doctor Strange for help. When a spell goes wrong, dangerous foes from other worlds start to appear, forcing Peter to discover what it truly means to be Spider-Man.",
-                    status = "RELEASING",
+                    status = MediaStatus.RELEASING,
                     seasonYear = 2021,
                     trailer = null,
                     duration = 170,

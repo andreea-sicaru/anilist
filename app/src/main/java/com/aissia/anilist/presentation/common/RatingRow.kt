@@ -12,8 +12,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.aissia.anilist.ui.theme.GoldStar
-import com.aissia.anilist.ui.theme.LightGray100
+import com.aissia.anilist.presentation.theme.GoldStar
+import com.aissia.anilist.presentation.theme.LightGray100
 
 @Composable
 fun RatingRow(score: Double, modifier: Modifier = Modifier) {

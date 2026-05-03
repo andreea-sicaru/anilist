@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aissia.anilist.domain.usecase.GetNowShowingAnimeUseCase
 import com.aissia.anilist.domain.usecase.GetPopularAnimeUseCase
+import com.aissia.anilist.presentation.UiState
 import com.aissia.anilist.presentation.toErrorMessage
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
@@ -44,42 +45,45 @@ class HomeViewModel @Inject constructor(
 
     private fun loadInitialData() {
         viewModelScope.launch {
-            _state.update { it.copy(isLoadingPopular = true, isLoadingNowShowing = true) }
+            _state.update { it.copy(nowShowing = UiState.Loading, popular = UiState.Loading) }
 
-            val popularDeferred = async { getPopularAnime(page = 1) }
             val nowShowingDeferred = async { getNowShowingAnime(page = 1) }
+            val popularDeferred = async { getPopularAnime(page = 1) }
 
             nowShowingDeferred.await().fold(
-                onSuccess = { (list, hasNext) ->  _state.update { it.copy(isLoadingNowShowing = false, nowShowingAnime = list, nowShowingError = null) } },
-                onFailure = { e -> _state.update { it.copy(isLoadingNowShowing = false, nowShowingError = e.toErrorMessage()) } }
+                onSuccess = { result ->
+                    _state.update { it.copy(nowShowing = UiState.Success(result.items)) }
+                },
+                onFailure = { e ->
+                    _state.update { it.copy(nowShowing = UiState.Error(e.toErrorMessage())) }
+                }
             )
-            popularDeferred.await().fold(onSuccess = { (list, hasNext) ->
-                _state.update {
-                    it.copy(
-                        isLoadingPopular = false,
-                        popularAnime = list,
-                        hasMorePopular = hasNext,
-                        currentPopularPage = 1,
-                        popularError = null
-                    )
+            popularDeferred.await().fold(
+                onSuccess = { result ->
+                    _state.update {
+                        it.copy(
+                            popular = UiState.Success(result.items),
+                            hasMorePopular = result.hasNextPage,
+                            currentPopularPage = 1,
+                        )
+                    }
+                },
+                onFailure = { e ->
+                    _state.update { it.copy(popular = UiState.Error(e.toErrorMessage())) }
                 }
-            }, onFailure = { e ->
-                _state.update {
-                    it.copy(isLoadingPopular = false, popularError = e.toErrorMessage())
-                }
-            })
+            )
         }
     }
 
     private fun loadNowShowing() {
         viewModelScope.launch {
-            _state.update { it.copy(isLoadingNowShowing = true, nowShowingError = null) }
+            _state.update { it.copy(nowShowing = UiState.Loading) }
             getNowShowingAnime(page = 1).fold(
-                onSuccess = { (list, _) ->
-                    _state.update { it.copy(isLoadingNowShowing = false, nowShowingAnime = list) }
+                onSuccess = { result ->
+                    _state.update { it.copy(nowShowing = UiState.Success(result.items)) }
                 },
                 onFailure = { e ->
-                    _state.update { it.copy(isLoadingNowShowing = false, nowShowingError = e.toErrorMessage()) }
+                    _state.update { it.copy(nowShowing = UiState.Error(e.toErrorMessage())) }
                     sendEffect(HomeContract.Effect.ShowError(e.toErrorMessage()))
                 }
             )
@@ -94,22 +98,21 @@ class HomeViewModel @Inject constructor(
 
     private fun loadPopular(page: Int, reset: Boolean) {
         viewModelScope.launch {
-            _state.update { it.copy(isPaginatingPopular = true, popularError = null) }
+            _state.update { it.copy(isPaginatingPopular = true) }
             getPopularAnime(page = page).fold(
-                onSuccess = { (list, hasNext) ->
+                onSuccess = { result ->
                     _state.update { s ->
+                        val existing = (s.popular as? UiState.Success)?.data ?: emptyList()
                         s.copy(
                             isPaginatingPopular = false,
-                            isLoadingPopular = false,
-                            popularAnime = if (reset) list else s.popularAnime + list,
-                            hasMorePopular = hasNext,
+                            popular = UiState.Success(if (reset) result.items else existing + result.items),
+                            hasMorePopular = result.hasNextPage,
                             currentPopularPage = page,
-                            popularError = null
                         )
                     }
                 },
                 onFailure = { e ->
-                    _state.update { it.copy(isPaginatingPopular = false, popularError = e.toErrorMessage()) }
+                    _state.update { it.copy(isPaginatingPopular = false) }
                     sendEffect(HomeContract.Effect.ShowError(e.toErrorMessage()))
                 }
             )
@@ -119,5 +122,4 @@ class HomeViewModel @Inject constructor(
     private fun sendEffect(effect: HomeContract.Effect) {
         viewModelScope.launch { _effect.send(effect) }
     }
-
 }

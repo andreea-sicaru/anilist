@@ -15,8 +15,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.aissia.anilist.ui.theme.DarkBlue900
-import com.aissia.anilist.ui.theme.LightGray80
+import com.aissia.anilist.presentation.theme.DarkBlue900
+import com.aissia.anilist.presentation.theme.LightGray80
 
 @Composable
 fun SectionHeader(title: String, modifier: Modifier = Modifier) {

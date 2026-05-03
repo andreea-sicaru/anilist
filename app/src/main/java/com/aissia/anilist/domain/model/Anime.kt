@@ -12,7 +12,7 @@ data class Anime(
     val genres: List<String>,
     val description: String?,
     val trailer: Trailer?,
-    val status: String?,
+    val status: MediaStatus?,
     val seasonYear: Int?,
     val duration: Int? = null,
     val countryOfOrigin: String? = null,
