@@ -2,6 +2,7 @@ package com.aissia.anilist.data.repository
 
 import com.aissia.anilist.domain.model.Anime
 import com.aissia.anilist.domain.model.Character
+import com.aissia.anilist.domain.model.PaginatedResult
 import com.aissia.anilist.domain.model.Trailer
 import com.aissia.anilist.domain.repository.AnimeRepository
 import com.aissia.anilist.graphql.GetAnimeDetailQuery
@@ -17,7 +18,7 @@ class AnimeRepositoryImpl @Inject constructor(
     private val apolloClient: ApolloClient
 ) : AnimeRepository {
 
-    override suspend fun getPopularAnime(page: Int, perPage: Int): Result<Pair<List<Anime>, Boolean>> = runCatching {
+    override suspend fun getPopularAnime(page: Int, perPage: Int): Result<PaginatedResult<Anime>> = runCatching {
         val response = apolloClient.query(
             GetPopularAnimeQuery(
                 page = Optional.Present(page),
@@ -26,12 +27,13 @@ class AnimeRepositoryImpl @Inject constructor(
         ).execute()
         response.exception?.let { throw it }
         val pageData = response.data?.Page
-        val list = pageData?.media?.filterNotNull()?.map { it.toAnime() } ?: emptyList()
-        val hasNextPage = pageData?.pageInfo?.hasNextPage ?: false
-        Pair(list, hasNextPage)
+        PaginatedResult(
+            items = pageData?.media?.filterNotNull()?.map { it.toAnime() } ?: emptyList(),
+            hasNextPage = pageData?.pageInfo?.hasNextPage ?: false,
+        )
     }
 
-    override suspend fun getNowShowingAnime(page: Int, perPage: Int): Result<Pair<List<Anime>, Boolean>> = runCatching {
+    override suspend fun getNowShowingAnime(page: Int, perPage: Int): Result<PaginatedResult<Anime>> = runCatching {
         val response = apolloClient.query(
             GetNowShowingQuery(
                 page = Optional.Present(page),
@@ -40,9 +42,10 @@ class AnimeRepositoryImpl @Inject constructor(
         ).execute()
         response.exception?.let { throw it }
         val pageData = response.data?.Page
-        val list = pageData?.media?.filterNotNull()?.map { it.toAnime() } ?: emptyList()
-        val hasNextPage = pageData?.pageInfo?.hasNextPage ?: false
-        Pair(list, hasNextPage)
+        PaginatedResult(
+            items = pageData?.media?.filterNotNull()?.map { it.toAnime() } ?: emptyList(),
+            hasNextPage = pageData?.pageInfo?.hasNextPage ?: false,
+        )
     }
 
     override suspend fun getAnimeDetail(id: Int): Result<Anime> = runCatching {

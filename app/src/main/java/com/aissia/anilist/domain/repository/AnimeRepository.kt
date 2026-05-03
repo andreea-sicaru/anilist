@@ -1,10 +1,10 @@
 package com.aissia.anilist.domain.repository
 
 import com.aissia.anilist.domain.model.Anime
+import com.aissia.anilist.domain.model.PaginatedResult
 
 interface AnimeRepository {
-    suspend fun getPopularAnime(page: Int, perPage: Int = 50): Result<Pair<List<Anime>, Boolean>>
-
-    suspend fun getNowShowingAnime(page: Int, perPage: Int = 50): Result<Pair<List<Anime>, Boolean>>
+    suspend fun getPopularAnime(page: Int, perPage: Int = 50): Result<PaginatedResult<Anime>>
+    suspend fun getNowShowingAnime(page: Int, perPage: Int = 50): Result<PaginatedResult<Anime>>
     suspend fun getAnimeDetail(id: Int): Result<Anime>
 }
