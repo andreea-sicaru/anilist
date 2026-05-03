@@ -12,8 +12,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import com.aissia.anilist.ui.theme.AnilistTheme
-import com.aissia.anilist.ui.theme.Dimens
+import com.aissia.anilist.presentation.theme.AnilistTheme
+import com.aissia.anilist.presentation.theme.Dimens
 
 @Composable
 fun ErrorView(message: String, onRetry: () -> Unit, modifier: Modifier = Modifier) {

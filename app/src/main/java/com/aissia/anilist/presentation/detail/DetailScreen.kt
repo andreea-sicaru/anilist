@@ -59,10 +59,10 @@ import com.aissia.anilist.presentation.detail.components.TrailerPlayer
 import com.aissia.anilist.presentation.home.components.SectionHeader
 import com.aissia.anilist.presentation.toFormattedDuration
 import com.aissia.anilist.presentation.toLanguage
-import com.aissia.anilist.ui.theme.AnilistTheme
-import com.aissia.anilist.ui.theme.DarkBlue900
-import com.aissia.anilist.ui.theme.Dimens
-import com.aissia.anilist.ui.theme.LightGray100
+import com.aissia.anilist.presentation.theme.AnilistTheme
+import com.aissia.anilist.presentation.theme.DarkBlue900
+import com.aissia.anilist.presentation.theme.Dimens
+import com.aissia.anilist.presentation.theme.LightGray100
 
 @Composable
 fun DetailScreen(

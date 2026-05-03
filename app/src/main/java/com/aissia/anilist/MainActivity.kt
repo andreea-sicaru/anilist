@@ -5,7 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import com.aissia.anilist.presentation.navigation.AppNavHost
-import com.aissia.anilist.ui.theme.AnilistTheme
+import com.aissia.anilist.presentation.theme.AnilistTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

@@ -9,8 +9,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -27,11 +25,10 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.aissia.anilist.R
 import com.aissia.anilist.domain.model.Anime
-import com.aissia.anilist.presentation.common.GenreChip
 import com.aissia.anilist.presentation.common.GenreChipList
 import com.aissia.anilist.presentation.common.RatingRow
 import com.aissia.anilist.presentation.toFormattedDuration
-import com.aissia.anilist.ui.theme.Dimens
+import com.aissia.anilist.presentation.theme.Dimens
 
 @Composable
 fun PopularAnimeCard(anime: Anime, onAnimeClick: (Int) -> Unit, modifier: Modifier = Modifier) {

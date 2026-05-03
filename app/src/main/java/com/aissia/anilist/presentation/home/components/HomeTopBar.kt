@@ -17,8 +17,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.aissia.anilist.R
-import com.aissia.anilist.ui.theme.DarkBlue900
-import com.aissia.anilist.ui.theme.Dimens.IconSizeMedium
+import com.aissia.anilist.presentation.theme.DarkBlue900
+import com.aissia.anilist.presentation.theme.Dimens.IconSizeMedium
 
 @Composable
 fun HomeTopBar(modifier: Modifier = Modifier) {

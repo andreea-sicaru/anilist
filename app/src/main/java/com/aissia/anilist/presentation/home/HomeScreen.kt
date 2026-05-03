@@ -33,9 +33,9 @@ import com.aissia.anilist.presentation.home.components.HomeTopBar
 import com.aissia.anilist.presentation.home.components.NowShowingSection
 import com.aissia.anilist.presentation.home.components.PopularAnimeCard
 import com.aissia.anilist.presentation.home.components.SectionHeader
-import com.aissia.anilist.ui.theme.Dimens
-import com.aissia.anilist.ui.theme.ScreenBackgroundLeft
-import com.aissia.anilist.ui.theme.ScreenBackgroundRight
+import com.aissia.anilist.presentation.theme.Dimens
+import com.aissia.anilist.presentation.theme.ScreenBackgroundLeft
+import com.aissia.anilist.presentation.theme.ScreenBackgroundRight
 
 @Composable
 fun HomeScreen(onAnimeClick: (Int) -> Unit, viewModel: HomeViewModel = hiltViewModel()) {
