@@ -14,5 +14,7 @@ data class Anime(
     val trailer: Trailer?,
     val status: String?,
     val seasonYear: Int?,
-    val duration: Int? = null
+    val duration: Int? = null,
+    val countryOfOrigin: String? = null,
+    val characters: List<Character> = emptyList(),
 )

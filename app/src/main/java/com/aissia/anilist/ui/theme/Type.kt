@@ -27,6 +27,12 @@ val Typography = Typography(
         letterSpacing = 0.5.sp
     ),
 
+    titleLarge = TextStyle(
+        fontFamily = Mullish,
+        fontSize = 20.sp,
+        fontWeight = FontWeight.Bold
+    ),
+
     titleMedium = TextStyle(
         fontFamily = Merriweather,
         fontWeight = FontWeight.Black,

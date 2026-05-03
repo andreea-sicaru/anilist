@@ -15,12 +15,14 @@ import com.aissia.anilist.presentation.home.HomeScreen
 fun AppNavHost(navController: NavHostController = rememberNavController()) {
     NavHost(navController = navController, startDestination = Screen.Home.route) {
         composable(Screen.Home.route) {
-            HomeScreen()
+            HomeScreen(onAnimeClick = { animeId ->
+                navController.navigate(Screen.Detail.createRoute(animeId))
+            })
         }
         composable(route = Screen.Detail.route, arguments = listOf(navArgument("animeId") {
             type = NavType.IntType
         })) {
-            DetailScreen()
+            DetailScreen(onBack = { navController.popBackStack() })
         }
     }
 }

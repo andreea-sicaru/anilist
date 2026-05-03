@@ -22,5 +22,20 @@ query GetAnimeDetail($id: Int) {
     }
     status
     seasonYear
+    countryOfOrigin
+    characters(perPage: 4, sort: [ROLE]) {
+      edges {
+        node {
+          id
+          name {
+            full
+          }
+          image {
+            large
+          }
+        }
+        role
+      }
+    }
   }
 }

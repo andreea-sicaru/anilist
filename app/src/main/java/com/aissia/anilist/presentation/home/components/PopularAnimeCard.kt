@@ -27,15 +27,18 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.aissia.anilist.R
 import com.aissia.anilist.domain.model.Anime
+import com.aissia.anilist.presentation.common.GenreChip
+import com.aissia.anilist.presentation.common.GenreChipList
+import com.aissia.anilist.presentation.common.RatingRow
 import com.aissia.anilist.presentation.toFormattedDuration
 import com.aissia.anilist.ui.theme.Dimens
 
 @Composable
-fun PopularAnimeCard(anime: Anime, modifier: Modifier = Modifier) {
+fun PopularAnimeCard(anime: Anime, onAnimeClick: (Int) -> Unit, modifier: Modifier = Modifier) {
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .clickable(onClick = {})
+            .clickable { onAnimeClick(anime.id) }
             .padding(horizontal = Dimens.PaddingLarge, vertical = 8.dp)
     ) {
         AsyncImage(
@@ -60,14 +63,9 @@ fun PopularAnimeCard(anime: Anime, modifier: Modifier = Modifier) {
             anime.averageScore?.let { score ->
                 RatingRow(score)
             }
-            LazyRow(
-                modifier = Modifier.padding(top = 4.dp),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                items(anime.genres) { genre ->
-                    GenreChip(genre)
-                }
-            }
+
+            GenreChipList(anime.genres, modifier = Modifier.padding(top = 4.dp))
+
             anime.duration?.let { minutes ->
                 Row(
                     modifier = Modifier.padding(top = 8.dp),
