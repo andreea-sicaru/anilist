@@ -1,5 +1,7 @@
 package com.aissia.anilist.presentation
 
+fun Throwable.toErrorMessage(): String =
+    message ?: "Something went wrong. Please check your connection."
 
 // Converts an Int to duration string: eg. 1h 40m
 fun Int.toFormattedDuration(): String {

@@ -12,6 +12,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
@@ -25,6 +27,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.aissia.anilist.presentation.common.ErrorView
 import com.aissia.anilist.presentation.home.components.HomeBottomBar
 import com.aissia.anilist.presentation.home.components.HomeTopBar
 import com.aissia.anilist.presentation.home.components.NowShowingSection
@@ -39,12 +42,13 @@ fun HomeScreen(onAnimeClick: (Int) -> Unit, viewModel: HomeViewModel = hiltViewM
 
     val state by viewModel.state.collectAsStateWithLifecycle()
     val listState = rememberLazyListState()
+    val snackbarHostState = remember { SnackbarHostState() }
 
     LaunchedEffect(Unit) {
         viewModel.effect.collect { effect ->
             when (effect) {
                 is HomeContract.Effect.NavigateToDetail -> onAnimeClick(effect.animeId)
-                is HomeContract.Effect.ShowError -> {}
+                is HomeContract.Effect.ShowError -> snackbarHostState.showSnackbar(effect.message)
             }
         }
     }
@@ -64,12 +68,22 @@ fun HomeScreen(onAnimeClick: (Int) -> Unit, viewModel: HomeViewModel = hiltViewM
     HomeScreenContents(
         state = state,
         listState = listState,
-        onAnimeClick = { id -> viewModel.onEvent(HomeContract.Event.AnimeClicked(id)) }
+        snackbarHostState = snackbarHostState,
+        onAnimeClick = { id -> viewModel.onEvent(HomeContract.Event.AnimeClicked(id)) },
+        onRetryNowShowing = { viewModel.onEvent(HomeContract.Event.RetryTrending) },
+        onRetryPopular = { viewModel.onEvent(HomeContract.Event.RetryPopular) },
     )
 }
 
 @Composable
-fun HomeScreenContents(state: HomeContract.State, listState: LazyListState, onAnimeClick: (Int) -> Unit) {
+fun HomeScreenContents(
+    state: HomeContract.State,
+    listState: LazyListState,
+    snackbarHostState: SnackbarHostState,
+    onAnimeClick: (Int) -> Unit,
+    onRetryNowShowing: () -> Unit,
+    onRetryPopular: () -> Unit,
+) {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -89,7 +103,8 @@ fun HomeScreenContents(state: HomeContract.State, listState: LazyListState, onAn
             modifier = Modifier.fillMaxSize(),
             containerColor = Color.Transparent,
             topBar = { HomeTopBar() },
-            bottomBar = { HomeBottomBar() }
+            bottomBar = { HomeBottomBar() },
+            snackbarHost = { SnackbarHost(snackbarHostState) }
         ) { paddingValues ->
             LazyColumn(
                 modifier = Modifier
@@ -97,19 +112,22 @@ fun HomeScreenContents(state: HomeContract.State, listState: LazyListState, onAn
                     .padding(paddingValues),
                 state = listState
             ) {
-                item { SectionHeader(
-                    title = "Now showing",
-                    modifier = Modifier.padding(
-                        horizontal = Dimens.PaddingLarge,
-                        vertical = Dimens.PaddingMedium
+                item {
+                    SectionHeader(
+                        title = "Now showing",
+                        modifier = Modifier.padding(
+                            horizontal = Dimens.PaddingLarge,
+                            vertical = Dimens.PaddingMedium
+                        )
                     )
+                }
 
-                ) }
-
-                if (state.isLoadingNowShowing) {
-                    item { LoadingIndicator() }
-                } else {
-                    item { NowShowingSection(animes = state.nowShowingAnime, onAnimeClick = onAnimeClick) }
+                when {
+                    state.isLoadingNowShowing -> item { LoadingIndicator() }
+                    state.nowShowingError != null -> item {
+                        ErrorView(message = state.nowShowingError, onRetry = onRetryNowShowing)
+                    }
+                    else -> item { NowShowingSection(animes = state.nowShowingAnime, onAnimeClick = onAnimeClick) }
                 }
 
                 item { Spacer(modifier = Modifier.height(Dimens.SpacingMedium)) }
@@ -124,22 +142,27 @@ fun HomeScreenContents(state: HomeContract.State, listState: LazyListState, onAn
                     )
                 }
 
-                if (state.isLoadingPopular) {
-                    item { LoadingIndicator() }
-                } else {
-                    items(state.popularAnime) { anime ->
-                        PopularAnimeCard(anime = anime, onAnimeClick = onAnimeClick)
+                when {
+                    state.isLoadingPopular -> item { LoadingIndicator() }
+                    state.popularError != null -> item {
+                        ErrorView(message = state.popularError, onRetry = onRetryPopular)
                     }
+                    else -> {
+                        items(state.popularAnime) { anime ->
+                            PopularAnimeCard(anime = anime, onAnimeClick = onAnimeClick)
+                        }
 
-                    if (state.isPaginatingPopular) {
-                        item {
-                            Box(modifier = Modifier.fillMaxWidth().padding(Dimens.PaddingMedium), contentAlignment = Alignment.Center) {
-                                CircularProgressIndicator()
+                        if (state.isPaginatingPopular) {
+                            item {
+                                Box(
+                                    modifier = Modifier.fillMaxWidth().padding(Dimens.PaddingMedium),
+                                    contentAlignment = Alignment.Center
+                                ) { CircularProgressIndicator() }
                             }
                         }
-                    }
 
-                    item { Spacer(modifier = Modifier.height(Dimens.SpacingMedium)) }
+                        item { Spacer(modifier = Modifier.height(Dimens.SpacingMedium)) }
+                    }
                 }
             }
         }

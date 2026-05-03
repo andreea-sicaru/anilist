@@ -19,6 +19,5 @@ object DetailContract {
 
     sealed class Effect {
         object NavigateBack : Effect()
-        data class ShowError(val message: String) : Effect()
     }
 }
