@@ -45,14 +45,14 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             _state.update { it.copy(isLoadingPopular = true, isLoadingNowShowing = true) }
 
-            val popularDeffered = async { getPopularAnime(page = 1) }
-            val nowShowingDeffered = async { getNowShowingAnime(page = 1) }
+            val popularDeferred = async { getPopularAnime(page = 1) }
+            val nowShowingDeferred = async { getNowShowingAnime(page = 1) }
 
-            nowShowingDeffered.await().fold(
+            nowShowingDeferred.await().fold(
                 onSuccess = { (list, hasNext) ->  _state.update { it.copy(isLoadingNowShowing = false, nowShowingAnime = list, nowShowingError = null) } },
                 onFailure = { e -> _state.update { it.copy(isLoadingNowShowing = false, nowShowingError = e.message) } }
             )
-            popularDeffered.await().fold(onSuccess = { (list, hasNext) ->
+            popularDeferred.await().fold(onSuccess = { (list, hasNext) ->
                 _state.update {
                     it.copy(
                         isLoadingPopular = false,

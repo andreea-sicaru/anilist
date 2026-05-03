@@ -187,7 +187,7 @@ fun MetaRow(
         verticalAlignment = Alignment.CenterVertically,
     ) {
         val duration = anime.duration?.toFormattedDuration()
-        Meta("Length", duration ?: "Unkown", modifier.weight(1f))
+        Meta("Length", duration ?: "Unknown", modifier.weight(1f))
 
         Meta("Language", anime.countryOfOrigin.toLanguage(), modifier.weight(1f))
         Meta("Rating", "PG-13", modifier.weight(1f))
