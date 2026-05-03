@@ -27,6 +27,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.aissia.anilist.presentation.UiState
 import com.aissia.anilist.presentation.common.ErrorView
 import com.aissia.anilist.presentation.home.components.HomeBottomBar
 import com.aissia.anilist.presentation.home.components.HomeTopBar
@@ -122,12 +123,14 @@ fun HomeScreenContents(
                     )
                 }
 
-                when {
-                    state.isLoadingNowShowing -> item { LoadingIndicator() }
-                    state.nowShowingError != null -> item {
-                        ErrorView(message = state.nowShowingError, onRetry = onRetryNowShowing)
+                when (val nowShowing = state.nowShowing) {
+                    is UiState.Loading -> item { LoadingIndicator() }
+                    is UiState.Error -> item {
+                        ErrorView(message = nowShowing.message, onRetry = onRetryNowShowing)
                     }
-                    else -> item { NowShowingSection(animes = state.nowShowingAnime, onAnimeClick = onAnimeClick) }
+                    is UiState.Success -> item {
+                        NowShowingSection(animes = nowShowing.data, onAnimeClick = onAnimeClick)
+                    }
                 }
 
                 item { Spacer(modifier = Modifier.height(Dimens.SpacingMedium)) }
@@ -142,13 +145,13 @@ fun HomeScreenContents(
                     )
                 }
 
-                when {
-                    state.isLoadingPopular -> item { LoadingIndicator() }
-                    state.popularError != null -> item {
-                        ErrorView(message = state.popularError, onRetry = onRetryPopular)
+                when (val popular = state.popular) {
+                    is UiState.Loading -> item { LoadingIndicator() }
+                    is UiState.Error -> item {
+                        ErrorView(message = popular.message, onRetry = onRetryPopular)
                     }
-                    else -> {
-                        items(state.popularAnime) { anime ->
+                    is UiState.Success -> {
+                        items(popular.data) { anime ->
                             PopularAnimeCard(anime = anime, onAnimeClick = onAnimeClick)
                         }
 
