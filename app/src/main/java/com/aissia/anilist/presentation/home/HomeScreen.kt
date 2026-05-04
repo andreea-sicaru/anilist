@@ -33,7 +33,7 @@ import com.aissia.anilist.presentation.home.components.HomeBottomBar
 import com.aissia.anilist.presentation.home.components.HomeTopBar
 import com.aissia.anilist.presentation.home.components.NowShowingSection
 import com.aissia.anilist.presentation.home.components.PopularAnimeCard
-import com.aissia.anilist.presentation.home.components.SectionHeader
+import com.aissia.anilist.presentation.common.SectionHeader
 import com.aissia.anilist.presentation.theme.Dimens
 import com.aissia.anilist.presentation.theme.ScreenBackgroundLeft
 import com.aissia.anilist.presentation.theme.ScreenBackgroundRight

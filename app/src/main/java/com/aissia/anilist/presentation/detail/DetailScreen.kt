@@ -61,7 +61,7 @@ import com.aissia.anilist.presentation.common.ErrorView
 import com.aissia.anilist.presentation.common.GenreChipList
 import com.aissia.anilist.presentation.common.RatingRow
 import com.aissia.anilist.presentation.detail.components.TrailerPlayer
-import com.aissia.anilist.presentation.home.components.SectionHeader
+import com.aissia.anilist.presentation.common.SectionHeader
 import com.aissia.anilist.presentation.theme.AnilistTheme
 import com.aissia.anilist.presentation.theme.DarkBlue900
 import com.aissia.anilist.presentation.theme.Dimens
@@ -294,11 +294,9 @@ private fun DescriptionSection(anime: Anime, modifier: Modifier = Modifier) {
     MetaRow(anime = anime, modifier = Modifier.padding(top = Dimens.PaddingMedium))
 
     anime.description?.let {
-        Text(
-            text = stringResource(R.string.label_description),
-            style = MaterialTheme.typography.titleMedium,
-            color = DarkBlue900,
-            modifier = modifier.padding(top = Dimens.PaddingLarge),
+        SectionHeader(
+            title = stringResource(R.string.label_description),
+            modifier = modifier.padding(top = Dimens.PaddingLarge)
         )
         Text(
             text = it,
