@@ -18,7 +18,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.outlined.MoreHoriz
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
@@ -40,6 +39,7 @@ import com.aissia.anilist.domain.model.Character
 import com.aissia.anilist.domain.model.MediaStatus
 import com.aissia.anilist.presentation.UiState
 import com.aissia.anilist.presentation.common.ErrorView
+import com.aissia.anilist.presentation.common.LoadingView
 import com.aissia.anilist.presentation.detail.components.AnimeInfoSection
 import com.aissia.anilist.presentation.detail.components.BannerSection
 import com.aissia.anilist.presentation.theme.AnilistTheme
@@ -73,7 +73,7 @@ fun DetailScreenContent(
     onRetry: () -> Unit = {},
 ) {
     when (val detail = state.detail) {
-        is UiState.Loading -> Box(Modifier.fillMaxSize(), Alignment.Center) { CircularProgressIndicator() }
+        is UiState.Loading -> LoadingView(Modifier.fillMaxSize())
         is UiState.Error -> Box(Modifier.fillMaxSize(), Alignment.Center) { ErrorView(message = detail.message, onRetry = onRetry) }
         is UiState.Success -> AnimeContent(anime = detail.data, onBack = onBack)
     }

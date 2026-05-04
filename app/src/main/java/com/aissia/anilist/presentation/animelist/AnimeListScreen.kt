@@ -34,6 +34,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.aissia.anilist.presentation.UiState
 import com.aissia.anilist.presentation.common.ErrorView
+import com.aissia.anilist.presentation.common.LoadingView
 import com.aissia.anilist.presentation.home.components.PopularAnimeCard
 import com.aissia.anilist.presentation.theme.Dimens
 
@@ -102,10 +103,7 @@ fun AnimeListScreen(
         ) {
             when (val items = state.items) {
                 is UiState.Loading -> item {
-                    Box(
-                        modifier = Modifier.fillMaxWidth().height(Dimens.SpacingExtraLarge * 5),
-                        contentAlignment = Alignment.Center
-                    ) { CircularProgressIndicator() }
+                    LoadingView(Modifier.fillMaxWidth().height(Dimens.SpacingExtraLarge * 5))
                 }
 
                 is UiState.Error -> item {

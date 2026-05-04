@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -29,6 +28,7 @@ import com.aissia.anilist.presentation.UiState
 import com.aissia.anilist.presentation.home.components.BottomNavItem
 import com.aissia.anilist.presentation.animelist.AnimeListType
 import com.aissia.anilist.presentation.common.ErrorView
+import com.aissia.anilist.presentation.common.LoadingView
 import com.aissia.anilist.presentation.home.components.HomeBottomBar
 import com.aissia.anilist.presentation.home.components.HomeTopBar
 import com.aissia.anilist.presentation.home.components.NowShowingSection
@@ -108,10 +108,7 @@ fun HomeScreenContents(
             ) {
                 when (val data = state.homeSections) {
                     is UiState.Loading -> item {
-                        Box(
-                            modifier = Modifier.fillMaxWidth().height(Dimens.SpacingExtraLarge * 5),
-                            contentAlignment = Alignment.Center
-                        ) { CircularProgressIndicator() }
+                        LoadingView(Modifier.fillMaxWidth().height(Dimens.SpacingExtraLarge * 5))
                     }
 
                     is UiState.Error -> item {
