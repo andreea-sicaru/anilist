@@ -10,7 +10,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import com.aissia.anilist.R
 import androidx.compose.ui.tooling.preview.Preview
 import com.aissia.anilist.presentation.theme.AnilistTheme
 import com.aissia.anilist.presentation.theme.Dimens
@@ -31,7 +33,7 @@ fun ErrorView(message: String, onRetry: () -> Unit, modifier: Modifier = Modifie
             textAlign = TextAlign.Center
         )
         Button(onClick = onRetry) {
-            Text("Retry")
+            Text(stringResource(R.string.retry))
         }
     }
 }

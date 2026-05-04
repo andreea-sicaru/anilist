@@ -28,14 +28,7 @@ class AnimeListViewModel @Inject constructor(
 
     private val listType: AnimeListType = savedStateHandle.toRoute<AnimeListRoute>().listType
 
-    private val _state = MutableStateFlow(
-        AnimeListContract.State(
-            title = when (listType) {
-                AnimeListType.NOW_SHOWING -> "Now Showing"
-                AnimeListType.POPULAR -> "Popular"
-            }
-        )
-    )
+    private val _state = MutableStateFlow(AnimeListContract.State(listType = listType))
     val state: StateFlow<AnimeListContract.State> = _state.asStateFlow()
 
     private val _effect = Channel<AnimeListContract.Effect>()

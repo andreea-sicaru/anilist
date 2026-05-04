@@ -41,6 +41,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -58,6 +59,7 @@ import com.aissia.anilist.presentation.common.GenreChipList
 import com.aissia.anilist.presentation.common.RatingRow
 import com.aissia.anilist.presentation.detail.components.TrailerPlayer
 import com.aissia.anilist.presentation.home.components.SectionHeader
+import com.aissia.anilist.R
 import com.aissia.anilist.presentation.toFormattedDuration
 import com.aissia.anilist.presentation.toLanguage
 import com.aissia.anilist.presentation.theme.AnilistTheme
@@ -150,7 +152,7 @@ fun DescriptionSection(anime: Anime?, modifier: Modifier = Modifier) {
 
         Icon(
             imageVector = Icons.Outlined.BookmarkBorder,
-            contentDescription = "Bookmark",
+            contentDescription = stringResource(R.string.cd_bookmark),
             modifier = Modifier
 //                .clickable { }
                 .padding(top = 3.dp)
@@ -170,7 +172,7 @@ fun DescriptionSection(anime: Anime?, modifier: Modifier = Modifier) {
     anime?.description?.let {
         Text(
             modifier = modifier.padding(top = Dimens.PaddingLarge),
-            text = "Description",
+            text = stringResource(R.string.label_description),
             style = MaterialTheme.typography.titleMedium,
             color = DarkBlue900
         )
@@ -185,7 +187,7 @@ fun DescriptionSection(anime: Anime?, modifier: Modifier = Modifier) {
     }
 
     if (!anime?.characters.isNullOrEmpty()) {
-        SectionHeader("Cast", modifier = Modifier.padding(top = Dimens.PaddingLarge))
+        SectionHeader(stringResource(R.string.label_cast), modifier = Modifier.padding(top = Dimens.PaddingLarge))
         CastList(
             characters = anime!!.characters,
             modifier = Modifier.padding(top = Dimens.PaddingMedium)
@@ -202,10 +204,9 @@ fun MetaRow(
         verticalAlignment = Alignment.CenterVertically,
     ) {
         val duration = anime.duration?.toFormattedDuration()
-        Meta("Length", duration ?: "Unknown", modifier.weight(1f))
-
-        Meta("Language", anime.countryOfOrigin.toLanguage(), modifier.weight(1f))
-        Meta("Rating", "PG-13", modifier.weight(1f))
+        Meta(stringResource(R.string.meta_length), duration ?: stringResource(R.string.meta_unknown), modifier.weight(1f))
+        Meta(stringResource(R.string.meta_language), anime.countryOfOrigin.toLanguage(), modifier.weight(1f))
+        Meta(stringResource(R.string.meta_rating), stringResource(R.string.meta_rating_value), modifier.weight(1f))
     }
 
 }
@@ -324,7 +325,7 @@ private fun BannerSection(
             IconButton(onClick = onBack) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = "Back",
+                    contentDescription = stringResource(R.string.cd_back),
                     tint = Color.White,
                     modifier = Modifier.size(20.dp)
                 )
@@ -332,7 +333,7 @@ private fun BannerSection(
             IconButton(onClick = {}) {
                 Icon(
                     imageVector = Icons.Outlined.MoreHoriz,
-                    contentDescription = "More",
+                    contentDescription = stringResource(R.string.cd_more),
                     tint = Color.White,
                 )
             }
@@ -364,7 +365,7 @@ private fun PlayButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
             }
         }
         Text(
-            text = "Play Trailer",
+            text = stringResource(R.string.play_trailer),
             color = Color.White,
             style = MaterialTheme.typography.labelMedium,
             fontWeight = FontWeight.Bold,

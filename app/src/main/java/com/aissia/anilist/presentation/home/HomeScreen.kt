@@ -23,6 +23,8 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.compose.ui.res.stringResource
+import com.aissia.anilist.R
 import com.aissia.anilist.presentation.UiState
 import com.aissia.anilist.presentation.animelist.AnimeListType
 import com.aissia.anilist.presentation.common.ErrorView
@@ -110,7 +112,7 @@ fun HomeScreenContents(
                     is UiState.Success -> {
                         item {
                             SectionHeader(
-                                title = "Now showing",
+                                title = stringResource(R.string.section_now_showing),
                                 onSeeMore = { onSeeMore(AnimeListType.NOW_SHOWING) },
                                 modifier = Modifier.padding(
                                     horizontal = Dimens.PaddingLarge,
@@ -127,7 +129,7 @@ fun HomeScreenContents(
                         item { Spacer(modifier = Modifier.height(Dimens.SpacingMedium)) }
                         item {
                             SectionHeader(
-                                title = "Popular",
+                                title = stringResource(R.string.section_popular),
                                 onSeeMore = { onSeeMore(AnimeListType.POPULAR) },
                                 modifier = Modifier.padding(
                                     horizontal = Dimens.PaddingLarge,

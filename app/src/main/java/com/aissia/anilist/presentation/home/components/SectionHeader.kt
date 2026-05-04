@@ -14,7 +14,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.aissia.anilist.R
 import com.aissia.anilist.presentation.theme.DarkBlue900
 import com.aissia.anilist.presentation.theme.LightGray80
 
@@ -39,7 +41,7 @@ fun SectionHeader(title: String, onSeeMore: (() -> Unit)? = null, modifier: Modi
                 shape = RoundedCornerShape(16.dp)
             ) {
                 Text(
-                    text = "See more",
+                    text = stringResource(R.string.see_more),
                     style = MaterialTheme.typography.labelSmall,
                     color = LightGray80
                 )

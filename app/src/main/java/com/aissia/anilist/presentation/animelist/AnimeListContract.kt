@@ -6,7 +6,7 @@ import com.aissia.anilist.presentation.UiState
 object AnimeListContract {
 
     data class State(
-        val title: String,
+        val listType: AnimeListType,
         val items: UiState<List<AnimePreview>> = UiState.Loading,
         val currentPage: Int = 1,
         val hasNextPage: Boolean = true,
