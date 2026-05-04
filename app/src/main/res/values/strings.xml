@@ -17,6 +17,10 @@
     <string name="meta_unknown">Unknown</string>
     <string name="play_trailer">Play Trailer</string>
 
+    <!-- Placeholder screens -->
+    <string name="tickets">Tickets</string>
+    <string name="saved">Saved</string>
+
     <!-- Rating -->
     <string name="imdb_rating">%s/10 IMDb</string>
 

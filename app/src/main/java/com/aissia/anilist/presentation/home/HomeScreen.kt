@@ -15,25 +15,22 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.compose.ui.res.stringResource
 import com.aissia.anilist.R
 import com.aissia.anilist.presentation.UiState
-import com.aissia.anilist.presentation.home.components.BottomNavItem
 import com.aissia.anilist.presentation.animelist.AnimeListType
 import com.aissia.anilist.presentation.common.ErrorView
 import com.aissia.anilist.presentation.common.LoadingView
-import com.aissia.anilist.presentation.home.components.HomeBottomBar
+import com.aissia.anilist.presentation.common.SectionHeader
 import com.aissia.anilist.presentation.home.components.HomeTopBar
 import com.aissia.anilist.presentation.home.components.NowShowingSection
 import com.aissia.anilist.presentation.home.components.PopularAnimeCard
-import com.aissia.anilist.presentation.common.SectionHeader
 import com.aissia.anilist.presentation.theme.Dimens
 import com.aissia.anilist.presentation.theme.ScreenBackgroundLeft
 import com.aissia.anilist.presentation.theme.ScreenBackgroundRight
@@ -42,7 +39,6 @@ import com.aissia.anilist.presentation.theme.ScreenBackgroundRight
 fun HomeScreen(
     onAnimeClick: (Int) -> Unit,
     onSeeMore: (AnimeListType) -> Unit,
-    onBottomNavClick: (BottomNavItem) -> Unit,
     viewModel: HomeViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -64,7 +60,6 @@ fun HomeScreen(
         onAnimeClick = { viewModel.onEvent(HomeContract.Event.AnimeClicked(it)) },
         onSeeMore = { viewModel.onEvent(HomeContract.Event.SeeMore(it)) },
         onRetry = { viewModel.onEvent(HomeContract.Event.Retry) },
-        onBottomNavClick = onBottomNavClick,
     )
 }
 
@@ -75,7 +70,6 @@ fun HomeScreenContents(
     onAnimeClick: (Int) -> Unit,
     onSeeMore: (AnimeListType) -> Unit,
     onRetry: () -> Unit,
-    onBottomNavClick: (BottomNavItem) -> Unit = {},
 ) {
     Box(
         modifier = Modifier
@@ -93,12 +87,6 @@ fun HomeScreenContents(
             modifier = Modifier.fillMaxSize(),
             containerColor = Color.Transparent,
             topBar = { HomeTopBar() },
-            bottomBar = {
-                HomeBottomBar(
-                    selectedItem = BottomNavItem.HOME,
-                    onItemSelected = onBottomNavClick,
-                )
-            },
             snackbarHost = { SnackbarHost(snackbarHostState) }
         ) { paddingValues ->
             LazyColumn(

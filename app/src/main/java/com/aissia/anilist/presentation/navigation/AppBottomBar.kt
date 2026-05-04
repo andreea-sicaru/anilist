@@ -1,4 +1,4 @@
-package com.aissia.anilist.presentation.home.components
+package com.aissia.anilist.presentation.navigation
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
@@ -13,19 +13,11 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import com.aissia.anilist.R
-import com.aissia.anilist.presentation.theme.DarkBlue900
+import com.aissia.anilist.presentation.home.BottomNavItem
 import com.aissia.anilist.presentation.theme.Dimens.IconSizeMedium
-import com.aissia.anilist.presentation.theme.LightGray80
-
-enum class BottomNavItem(val iconRes: Int, val contentDescription: String) {
-    HOME(R.drawable.ic_movie_reel, "Home"),
-    TICKETS(R.drawable.ic_ticket, "Tickets"),
-    SAVED(R.drawable.ic_saved, "Saved"),
-}
 
 @Composable
-fun HomeBottomBar(
+fun AppBottomBar(
     selectedItem: BottomNavItem = BottomNavItem.HOME,
     onItemSelected: (BottomNavItem) -> Unit = {},
 ) {

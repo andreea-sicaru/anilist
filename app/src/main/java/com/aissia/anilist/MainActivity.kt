@@ -4,7 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import com.aissia.anilist.presentation.navigation.AppNavHost
+import com.aissia.anilist.presentation.navigation.MainScreen
 import com.aissia.anilist.presentation.theme.AnilistTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -15,7 +15,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             AnilistTheme {
-                AppNavHost()
+                MainScreen()
             }
         }
     }

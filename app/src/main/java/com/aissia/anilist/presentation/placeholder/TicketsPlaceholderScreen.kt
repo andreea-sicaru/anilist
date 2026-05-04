@@ -16,15 +16,22 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import com.aissia.anilist.R
+import com.aissia.anilist.presentation.theme.AnilistTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PlaceholderScreen(title: String, onBack: () -> Unit) {
+fun TicketsPlaceholderScreen(onBack: () -> Unit) {
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
-                title = { Text(title, style = MaterialTheme.typography.titleMedium) },
+                title = {
+                    Text(
+                        stringResource(R.string.tickets),
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         Icon(
@@ -37,7 +44,9 @@ fun PlaceholderScreen(title: String, onBack: () -> Unit) {
         }
     ) { padding ->
         Box(
-            modifier = Modifier.fillMaxSize().padding(padding),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(padding),
             contentAlignment = Alignment.Center
         ) {
             Text(
@@ -46,5 +55,13 @@ fun PlaceholderScreen(title: String, onBack: () -> Unit) {
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
         }
+    }
+}
+
+@Preview
+@Composable
+private fun PlaceholderScreenPreview() {
+    AnilistTheme {
+        TicketsPlaceholderScreen(onBack = {})
     }
 }
