@@ -187,7 +187,11 @@ fun DescriptionSection(anime: Anime?, modifier: Modifier = Modifier) {
     }
 
     if (!anime?.characters.isNullOrEmpty()) {
-        SectionHeader(stringResource(R.string.label_cast), modifier = Modifier.padding(top = Dimens.PaddingLarge))
+        SectionHeader(
+            title = stringResource(R.string.label_cast),
+            onSeeMore = {},
+            modifier = Modifier.padding(top = Dimens.PaddingLarge),
+        )
         CastList(
             characters = anime!!.characters,
             modifier = Modifier.padding(top = Dimens.PaddingMedium)
@@ -236,8 +240,14 @@ private fun CastList(characters: List<Character>, modifier: Modifier = Modifier)
         modifier = modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(Dimens.PaddingMedium),
     ) {
-        characters.take(4).forEach { character ->
-            CastCard(character, modifier = Modifier.weight(1f))
+        // Display only 4 characters from the list, rest is available via See More CTA.
+        repeat(4) { index ->
+            val character = characters.getOrNull(index)
+            Box(modifier = Modifier.weight(1f)) {
+                if (character != null) {
+                    CastCard(character)
+                }
+            }
         }
     }
 }
