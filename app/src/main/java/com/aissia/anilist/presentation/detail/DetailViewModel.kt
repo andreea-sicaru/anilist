@@ -4,6 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aissia.anilist.domain.repository.AnimeRepository
+import com.aissia.anilist.presentation.UiState
 import com.aissia.anilist.presentation.toErrorMessage
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -38,7 +39,6 @@ class DetailViewModel @Inject constructor(
 
     fun onEvent(event: DetailContract.Event) {
         when (event) {
-            is DetailContract.Event.LoadDetail -> loadDetail()
             is DetailContract.Event.OnBackClicked -> sendEffect(DetailContract.Effect.NavigateBack)
             is DetailContract.Event.RetryLoad -> loadDetail()
         }
@@ -46,12 +46,10 @@ class DetailViewModel @Inject constructor(
 
     private fun loadDetail() {
         viewModelScope.launch {
-            _state.update { it.copy(isLoading = true, error = null) }
+            _state.update { it.copy(detail = UiState.Loading) }
             repository.getAnimeDetail(animeId).fold(
-                onSuccess = { anime -> _state.update { it.copy(isLoading = false, anime = anime) } },
-                onFailure = { e ->
-                    _state.update { it.copy(isLoading = false, error = e.toErrorMessage()) }
-                }
+                onSuccess = { anime -> _state.update { it.copy(detail = UiState.Success(anime)) } },
+                onFailure = { e -> _state.update { it.copy(detail = UiState.Error(e.toErrorMessage())) } }
             )
         }
     }

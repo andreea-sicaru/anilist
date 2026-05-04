@@ -1,20 +1,18 @@
 package com.aissia.anilist
 
 import androidx.lifecycle.SavedStateHandle
+import com.aissia.anilist.presentation.UiState
 import com.aissia.anilist.presentation.detail.DetailContract
 import com.aissia.anilist.presentation.detail.DetailViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.After
-import kotlinx.coroutines.flow.first
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertFalse
-import org.junit.Assert.assertNotNull
-import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
@@ -25,9 +23,6 @@ class DetailViewModelTest {
     private val testDispatcher = UnconfinedTestDispatcher()
     private lateinit var fakeRepo: FakeAnimeRepository
 
-    // DetailViewModel reads animeId via savedStateHandle.toRoute<DetailRoute>().
-    // Navigation 2.8 stores route arguments by their parameter names, so providing
-    // "animeId" directly in SavedStateHandle satisfies the deserialization.
     private fun savedStateHandleFor(id: Int) = SavedStateHandle(mapOf("animeId" to id))
 
     @Before
@@ -48,9 +43,8 @@ class DetailViewModelTest {
         val viewModel = DetailViewModel(fakeRepo, savedStateHandleFor(1))
 
         val state = viewModel.state.value
-        assertFalse(state.isLoading)
-        assertNull(state.error)
-        assertEquals(fakeAnime, state.anime)
+        assertTrue(state.detail is UiState.Success)
+        assertEquals(fakeAnime, (state.detail as UiState.Success).data)
     }
 
     @Test
@@ -60,23 +54,22 @@ class DetailViewModelTest {
         val viewModel = DetailViewModel(fakeRepo, savedStateHandleFor(1))
 
         val state = viewModel.state.value
-        assertFalse(state.isLoading)
-        assertNotNull(state.error)
-        assertEquals("Not found", state.error)
+        assertTrue(state.detail is UiState.Error)
+        assertEquals("Not found", (state.detail as UiState.Error).message)
     }
 
     @Test
     fun `retry reloads detail after failure`() = runTest {
         fakeRepo.animeDetailResult = Result.failure(Exception("error"))
         val viewModel = DetailViewModel(fakeRepo, savedStateHandleFor(1))
-        assertNotNull(viewModel.state.value.error)
+        assertTrue(viewModel.state.value.detail is UiState.Error)
 
         fakeRepo.animeDetailResult = Result.success(fakeAnime)
         viewModel.onEvent(DetailContract.Event.RetryLoad)
 
         val state = viewModel.state.value
-        assertNull(state.error)
-        assertEquals(fakeAnime, state.anime)
+        assertTrue(state.detail is UiState.Success)
+        assertEquals(fakeAnime, (state.detail as UiState.Success).data)
     }
 
     @Test

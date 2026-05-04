@@ -38,6 +38,7 @@ import com.aissia.anilist.R
 import com.aissia.anilist.domain.model.Anime
 import com.aissia.anilist.domain.model.Character
 import com.aissia.anilist.domain.model.MediaStatus
+import com.aissia.anilist.presentation.UiState
 import com.aissia.anilist.presentation.common.ErrorView
 import com.aissia.anilist.presentation.detail.components.AnimeInfoSection
 import com.aissia.anilist.presentation.detail.components.BannerSection
@@ -71,10 +72,10 @@ fun DetailScreenContent(
     onBack: () -> Unit,
     onRetry: () -> Unit = {},
 ) {
-    when {
-        state.isLoading -> Box(Modifier.fillMaxSize(), Alignment.Center) { CircularProgressIndicator() }
-        state.error != null -> Box(Modifier.fillMaxSize(), Alignment.Center) { ErrorView(message = state.error, onRetry = onRetry) }
-        state.anime != null -> AnimeContent(anime = state.anime, onBack = onBack)
+    when (val detail = state.detail) {
+        is UiState.Loading -> Box(Modifier.fillMaxSize(), Alignment.Center) { CircularProgressIndicator() }
+        is UiState.Error -> Box(Modifier.fillMaxSize(), Alignment.Center) { ErrorView(message = detail.message, onRetry = onRetry) }
+        is UiState.Success -> AnimeContent(anime = detail.data, onBack = onBack)
     }
 }
 
@@ -148,8 +149,7 @@ private fun DetailScreenPreview() {
     AnilistTheme(dynamicColor = false) {
         DetailScreenContent(
             state = DetailContract.State(
-                isLoading = false,
-                anime = Anime(
+                detail = UiState.Success(Anime(
                     id = 1,
                     title = "Spiderman: No Way Home",
                     bannerImage = "https://s4.anilist.co/file/anilistcdn/media/anime/banner/250-JpXhinXPqpNE.jpg",
@@ -171,7 +171,7 @@ private fun DetailScreenPreview() {
                         Character(id = 2, name = "Doctor Strange", imageUrl = "https://s4.anilist.co/file/anilistcdn/character/large/b270810-RDnZzM4DtLyn.png", role = "SUPPORTING"),
                     )
                 )
-            ),
+            )),
             onBack = {}
         )
     }
