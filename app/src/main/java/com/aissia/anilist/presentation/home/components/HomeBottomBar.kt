@@ -16,9 +16,19 @@ import androidx.compose.ui.unit.dp
 import com.aissia.anilist.R
 import com.aissia.anilist.presentation.theme.DarkBlue900
 import com.aissia.anilist.presentation.theme.Dimens.IconSizeMedium
+import com.aissia.anilist.presentation.theme.LightGray80
+
+enum class BottomNavItem(val iconRes: Int, val contentDescription: String) {
+    HOME(R.drawable.ic_movie_reel, "Home"),
+    TICKETS(R.drawable.ic_ticket, "Tickets"),
+    SAVED(R.drawable.ic_saved, "Saved"),
+}
 
 @Composable
-fun HomeBottomBar(modifier: Modifier = Modifier) {
+fun HomeBottomBar(
+    selectedItem: BottomNavItem = BottomNavItem.HOME,
+    onItemSelected: (BottomNavItem) -> Unit = {},
+) {
     NavigationBar(
         modifier = Modifier
             .fillMaxWidth()
@@ -28,47 +38,23 @@ fun HomeBottomBar(modifier: Modifier = Modifier) {
                 clip = false
             ),
         tonalElevation = 0.dp,
-        containerColor = Color.White
+        containerColor = Color.White,
     ) {
-        NavigationBarItem(
-            selected = true,
-            onClick = {},
-            icon = {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_movie_reel),
-                    contentDescription = "Home",
-                    tint = Color.Unspecified,
-                    modifier = modifier.size(IconSizeMedium)
-                )
-            },
-            colors = NavigationBarItemDefaults.colors(
-                selectedIconColor = DarkBlue900,
-                indicatorColor = Color.Transparent
+        BottomNavItem.entries.forEach { item ->
+            val selected = item == selectedItem
+            NavigationBarItem(
+                selected = selected,
+                onClick = { onItemSelected(item) },
+                icon = {
+                    Icon(
+                        painter = painterResource(id = item.iconRes),
+                        contentDescription = item.contentDescription,
+                        tint = Color.Unspecified,
+                        modifier = Modifier.size(IconSizeMedium),
+                    )
+                },
+                colors = NavigationBarItemDefaults.colors(indicatorColor = Color.Transparent),
             )
-        )
-        NavigationBarItem(
-            selected = false,
-            onClick = {},
-            icon = {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_ticket),
-                    contentDescription = "Tickets",
-                    tint = Color.Unspecified,
-                    modifier = modifier.size(IconSizeMedium)
-                )
-            }
-        )
-        NavigationBarItem(
-            selected = false,
-            onClick = {},
-            icon = {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_saved),
-                    contentDescription = "Saved",
-                    tint = Color.Unspecified,
-                    modifier = modifier.size(IconSizeMedium)
-                )
-            }
-        )
+        }
     }
 }

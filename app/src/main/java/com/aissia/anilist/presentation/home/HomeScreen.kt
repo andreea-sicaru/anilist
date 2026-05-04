@@ -26,6 +26,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.ui.res.stringResource
 import com.aissia.anilist.R
 import com.aissia.anilist.presentation.UiState
+import com.aissia.anilist.presentation.home.components.BottomNavItem
 import com.aissia.anilist.presentation.animelist.AnimeListType
 import com.aissia.anilist.presentation.common.ErrorView
 import com.aissia.anilist.presentation.home.components.HomeBottomBar
@@ -41,6 +42,7 @@ import com.aissia.anilist.presentation.theme.ScreenBackgroundRight
 fun HomeScreen(
     onAnimeClick: (Int) -> Unit,
     onSeeMore: (AnimeListType) -> Unit,
+    onBottomNavClick: (BottomNavItem) -> Unit,
     viewModel: HomeViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -62,6 +64,7 @@ fun HomeScreen(
         onAnimeClick = { viewModel.onEvent(HomeContract.Event.AnimeClicked(it)) },
         onSeeMore = { viewModel.onEvent(HomeContract.Event.SeeMore(it)) },
         onRetry = { viewModel.onEvent(HomeContract.Event.Retry) },
+        onBottomNavClick = onBottomNavClick,
     )
 }
 
@@ -72,6 +75,7 @@ fun HomeScreenContents(
     onAnimeClick: (Int) -> Unit,
     onSeeMore: (AnimeListType) -> Unit,
     onRetry: () -> Unit,
+    onBottomNavClick: (BottomNavItem) -> Unit = {},
 ) {
     Box(
         modifier = Modifier
@@ -89,7 +93,12 @@ fun HomeScreenContents(
             modifier = Modifier.fillMaxSize(),
             containerColor = Color.Transparent,
             topBar = { HomeTopBar() },
-            bottomBar = { HomeBottomBar() },
+            bottomBar = {
+                HomeBottomBar(
+                    selectedItem = BottomNavItem.HOME,
+                    onItemSelected = onBottomNavClick,
+                )
+            },
             snackbarHost = { SnackbarHost(snackbarHostState) }
         ) { paddingValues ->
             LazyColumn(

@@ -11,3 +11,6 @@ data class DetailRoute(val animeId: Int)
 
 @Serializable
 data class AnimeListRoute(val listType: AnimeListType)
+
+@Serializable
+data class PlaceholderRoute(val title: String)
