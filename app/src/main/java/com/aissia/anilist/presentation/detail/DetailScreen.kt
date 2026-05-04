@@ -40,8 +40,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -50,6 +50,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
+import com.aissia.anilist.R
 import com.aissia.anilist.domain.model.Anime
 import com.aissia.anilist.domain.model.Character
 import com.aissia.anilist.domain.model.MediaStatus
@@ -59,18 +60,17 @@ import com.aissia.anilist.presentation.common.GenreChipList
 import com.aissia.anilist.presentation.common.RatingRow
 import com.aissia.anilist.presentation.detail.components.TrailerPlayer
 import com.aissia.anilist.presentation.home.components.SectionHeader
-import com.aissia.anilist.R
-import com.aissia.anilist.presentation.toFormattedDuration
-import com.aissia.anilist.presentation.toLanguage
 import com.aissia.anilist.presentation.theme.AnilistTheme
 import com.aissia.anilist.presentation.theme.DarkBlue900
 import com.aissia.anilist.presentation.theme.Dimens
 import com.aissia.anilist.presentation.theme.LightGray100
+import com.aissia.anilist.presentation.toFormattedDuration
+import com.aissia.anilist.presentation.toLanguage
 
 @Composable
 fun DetailScreen(
     onBack: () -> Unit,
-    viewModel: DetailViewModel = hiltViewModel()
+    viewModel: DetailViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
@@ -96,235 +96,69 @@ fun DetailScreenContent(
     onRetry: () -> Unit = {},
 ) {
     when {
-        state.isLoading -> Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
-        ) { CircularProgressIndicator() }
-
-        state.error != null -> Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
-        ) {
-            ErrorView(message = state.error, onRetry = onRetry)
-        }
-
-        else -> Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Color.White)
-                .verticalScroll(rememberScrollState())
-                .navigationBarsPadding()
-        ) {
-            BannerSection(
-                bannerUrl = state.anime?.bannerImage ?: "",
-                trailer = state.anime?.trailer,
-                onBack = onBack
-            )
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .offset(y = (-24).dp)
-                    .clip(RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp))
-                    .background(Color.White)
-                    .padding(horizontal = 24.dp, vertical = 24.dp)
-            ) {
-                DescriptionSection(state.anime)
-            }
-        }
+        state.isLoading -> LoadingContent()
+        state.error != null -> ErrorContent(message = state.error, onRetry = onRetry)
+        state.anime != null -> AnimeContent(anime = state.anime, onBack = onBack)
     }
 }
 
 @Composable
-fun DescriptionSection(anime: Anime?, modifier: Modifier = Modifier) {
-
-    Row(
-        modifier = modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.Top,
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-        Text(
-            text = anime?.title ?: "",
-            style = MaterialTheme.typography.titleLarge,
-            maxLines = 2,
-            overflow = TextOverflow.Ellipsis,
-            modifier = Modifier.weight(1f),
-        )
-
-        Icon(
-            imageVector = Icons.Outlined.BookmarkBorder,
-            contentDescription = stringResource(R.string.cd_bookmark),
-            modifier = Modifier
-//                .clickable { }
-                .padding(top = 3.dp)
-        )
-    }
-
-    anime?.averageScore?.let { score ->
-        RatingRow(score = score, modifier = modifier.padding(top = Dimens.PaddingSmall))
-    }
-
-    anime?.genres?.let {
-        GenreChipList(it, modifier = Modifier.padding(top = Dimens.PaddingMedium))
-    }
-
-    anime?.let { MetaRow(anime, modifier = Modifier.padding(top = Dimens.PaddingSmall)) }
-
-    anime?.description?.let {
-        Text(
-            modifier = modifier.padding(top = Dimens.PaddingLarge),
-            text = stringResource(R.string.label_description),
-            style = MaterialTheme.typography.titleMedium,
-            color = DarkBlue900
-        )
-        Text(
-            modifier = modifier.padding(top = Dimens.PaddingSmall),
-            text = it,
-            style = MaterialTheme.typography.labelMedium,
-            color = LightGray100,
-            lineHeight = 22.sp,
-            letterSpacing = (12 * 0.02).sp
-        )
-    }
-
-    if (!anime?.characters.isNullOrEmpty()) {
-        SectionHeader(
-            title = stringResource(R.string.label_cast),
-            onSeeMore = {},
-            modifier = Modifier.padding(top = Dimens.PaddingLarge),
-        )
-        CastList(
-            characters = anime!!.characters,
-            modifier = Modifier.padding(top = Dimens.PaddingMedium)
-        )
+private fun LoadingContent() {
+    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+        CircularProgressIndicator()
     }
 }
 
 @Composable
-fun MetaRow(
-    anime: Anime, modifier: Modifier = Modifier
-) {
-    Row(
-        modifier = modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        val duration = anime.duration?.toFormattedDuration()
-        Meta(stringResource(R.string.meta_length), duration ?: stringResource(R.string.meta_unknown), modifier.weight(1f))
-        Meta(stringResource(R.string.meta_language), anime.countryOfOrigin.toLanguage(), modifier.weight(1f))
-        val rating = stringResource(if (anime.isAdult) R.string.meta_rating_r else R.string.meta_rating_pg13)
-        Meta(stringResource(R.string.meta_rating), rating, modifier.weight(1f))
+private fun ErrorContent(message: String, onRetry: () -> Unit) {
+    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+        ErrorView(message = message, onRetry = onRetry)
     }
-
 }
 
 @Composable
-fun Meta(title: String, subtitle: String, modifier: Modifier = Modifier) {
+private fun AnimeContent(anime: Anime, onBack: () -> Unit) {
+    Box(modifier = Modifier.fillMaxSize()) {
+        ScrollableContent(anime)
+        DetailTopBar(onBack = onBack)
+    }
+}
+
+@Composable
+private fun ScrollableContent(anime: Anime) {
     Column(
-        modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(Dimens.PaddingTiny)
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.White)
+            .verticalScroll(rememberScrollState())
+            .navigationBarsPadding()
     ) {
-        Text(
-            text = title,
-            style = MaterialTheme.typography.labelMedium,
-        )
-        Text(
-            text = subtitle,
-            style = MaterialTheme.typography.labelMedium,
-            fontWeight = FontWeight.SemiBold
-        )
-    }
-}
+        BannerSection(bannerUrl = anime.bannerImage ?: "", trailer = anime.trailer)
 
-@Composable
-private fun CastList(characters: List<Character>, modifier: Modifier = Modifier) {
-    Row(
-        modifier = modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(Dimens.PaddingMedium),
-    ) {
-        // Display only 4 characters from the list, rest is available via See More CTA.
-        repeat(4) { index ->
-            val character = characters.getOrNull(index)
-            Box(modifier = Modifier.weight(1f)) {
-                if (character != null) {
-                    CastCard(character)
-                }
-            }
-        }
-    }
-}
-
-@Composable
-private fun CastCard(character: Character, modifier: Modifier = Modifier) {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(Dimens.PaddingTiny),
-        modifier = modifier,
-    ) {
-        AsyncImage(
-            model = character.imageUrl,
-            contentDescription = character.name,
-            contentScale = ContentScale.Crop,
+        Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .aspectRatio(1f)
-                .clip(RoundedCornerShape(12.dp))
-        )
-        Text(
-            text = character.name,
-            style = MaterialTheme.typography.labelSmall,
-            maxLines = 2,
-            overflow = TextOverflow.Ellipsis,
-            textAlign = TextAlign.Center,
-        )
+                .offset(y = (-24).dp)
+                .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp))
+                .background(Color.White)
+                .padding(horizontal = 24.dp, vertical = 24.dp)
+        ) {
+            DescriptionSection(anime)
+        }
     }
 }
 
 @Composable
-private fun BannerSection(
-    bannerUrl: String,
-    trailer: Trailer?,
-    onBack: () -> Unit,
-) {
-    var isPlayingTrailer by remember { mutableStateOf(false) }
-
+private fun DetailTopBar(onBack: () -> Unit) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(300.dp)
-    ) {
-        if (isPlayingTrailer) {
-            TrailerPlayer(
-                trailer = trailer,
-                modifier = Modifier.fillMaxSize()
-            )
-        } else {
-            AsyncImage(
-                model = bannerUrl,
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
-                modifier = Modifier.fillMaxSize()
-            )
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(
-                        Brush.verticalGradient(
-                            colors = listOf(
-                                Color.Black.copy(alpha = 0.35f),
-                                Color.Transparent,
-                                Color.Black.copy(alpha = 0.15f),
-                            )
-                        )
-                    )
-            )
-            if (trailer != null) {
-                PlayButton(
-                    modifier = Modifier.align(Alignment.Center),
-                    onClick = { isPlayingTrailer = true }
+            .background(
+                Brush.verticalGradient(
+                    colors = listOf(Color.Black.copy(alpha = 0.4f), Color.Transparent)
                 )
-            }
-        }
-
-        // Always on top regardless of banner/player state
+            )
+    ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -353,6 +187,47 @@ private fun BannerSection(
 }
 
 @Composable
+private fun BannerSection(bannerUrl: String, trailer: Trailer?) {
+    var isPlayingTrailer by remember { mutableStateOf(false) }
+
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(300.dp)
+    ) {
+        if (isPlayingTrailer) {
+            TrailerPlayer(trailer = trailer, modifier = Modifier.fillMaxSize())
+        } else {
+            AsyncImage(
+                model = bannerUrl,
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.fillMaxSize()
+            )
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(
+                        Brush.verticalGradient(
+                            colors = listOf(
+                                Color.Black.copy(alpha = 0.35f),
+                                Color.Transparent,
+                                Color.Black.copy(alpha = 0.15f),
+                            )
+                        )
+                    )
+            )
+            if (trailer != null) {
+                PlayButton(
+                    modifier = Modifier.align(Alignment.Center),
+                    onClick = { isPlayingTrailer = true }
+                )
+            }
+        }
+    }
+}
+
+@Composable
 private fun PlayButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
     Column(
         modifier = modifier,
@@ -369,7 +244,7 @@ private fun PlayButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
             IconButton(onClick = onClick) {
                 Icon(
                     imageVector = Icons.Filled.PlayArrow,
-                    contentDescription = "Play Trailer",
+                    contentDescription = stringResource(R.string.play_trailer),
                     tint = DarkBlue900,
                     modifier = Modifier.size(32.dp)
                 )
@@ -384,10 +259,132 @@ private fun PlayButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
     }
 }
 
-@Preview(
-    showBackground = true, showSystemUi = true,
-    device = "spec:width=375dp,height=812dp,dpi=460" // to match Figma
-)
+@Composable
+private fun DescriptionSection(anime: Anime, modifier: Modifier = Modifier) {
+    Row(
+        modifier = modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.Top,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Text(
+            text = anime.title,
+            style = MaterialTheme.typography.titleLarge,
+            maxLines = 2,
+            overflow = TextOverflow.Ellipsis,
+            modifier = Modifier.weight(1f),
+        )
+        Icon(
+            imageVector = Icons.Outlined.BookmarkBorder,
+            contentDescription = stringResource(R.string.cd_bookmark),
+            modifier = Modifier.padding(top = 3.dp)
+        )
+    }
+
+    anime.averageScore?.let { score ->
+        RatingRow(score = score, modifier = modifier.padding(top = Dimens.PaddingSmall))
+    }
+
+    GenreChipList(anime.genres, modifier = Modifier.padding(top = Dimens.PaddingMedium))
+
+    MetaRow(anime = anime, modifier = Modifier.padding(top = Dimens.PaddingMedium))
+
+    anime.description?.let {
+        Text(
+            text = stringResource(R.string.label_description),
+            style = MaterialTheme.typography.titleMedium,
+            color = DarkBlue900,
+            modifier = modifier.padding(top = Dimens.PaddingLarge),
+        )
+        Text(
+            text = it,
+            style = MaterialTheme.typography.labelMedium,
+            color = LightGray100,
+            lineHeight = 22.sp,
+            letterSpacing = (12 * 0.02).sp,
+            modifier = modifier.padding(top = Dimens.PaddingSmall),
+        )
+    }
+
+    if (anime.characters.isNotEmpty()) {
+        SectionHeader(
+            title = stringResource(R.string.label_cast),
+            onSeeMore = {},
+            modifier = Modifier.padding(top = Dimens.PaddingLarge),
+        )
+        CastList(
+            characters = anime.characters,
+            modifier = Modifier.padding(top = Dimens.PaddingMedium)
+        )
+    }
+}
+
+@Composable
+private fun MetaRow(anime: Anime, modifier: Modifier = Modifier) {
+    Row(
+        modifier = modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        val duration = anime.duration?.toFormattedDuration()
+        Meta(stringResource(R.string.meta_length), duration ?: stringResource(R.string.meta_unknown), Modifier.weight(1f))
+        Meta(stringResource(R.string.meta_language), anime.countryOfOrigin.toLanguage(), Modifier.weight(1f))
+        val rating = stringResource(if (anime.isAdult) R.string.meta_rating_r else R.string.meta_rating_pg13)
+        Meta(stringResource(R.string.meta_rating), rating, Modifier.weight(1f))
+    }
+}
+
+@Composable
+private fun Meta(title: String, subtitle: String, modifier: Modifier = Modifier) {
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(Dimens.PaddingTiny)
+    ) {
+        Text(text = title, style = MaterialTheme.typography.labelMedium, color = LightGray100)
+        Text(text = subtitle, style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.SemiBold)
+    }
+}
+
+@Composable
+private fun CastList(characters: List<Character>, modifier: Modifier = Modifier) {
+    Row(
+        modifier = modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(Dimens.PaddingMedium),
+    ) {
+        repeat(4) { index ->
+            val character = characters.getOrNull(index)
+            Box(modifier = Modifier.weight(1f)) {
+                if (character != null) CastCard(character)
+            }
+        }
+    }
+}
+
+@Composable
+private fun CastCard(character: Character) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(Dimens.PaddingTiny),
+    ) {
+        AsyncImage(
+            model = character.imageUrl,
+            contentDescription = character.name,
+            contentScale = ContentScale.Crop,
+            modifier = Modifier
+                .fillMaxWidth()
+                .aspectRatio(1f)
+                .clip(RoundedCornerShape(12.dp))
+        )
+        Text(
+            text = character.name,
+            style = MaterialTheme.typography.labelSmall,
+            maxLines = 2,
+            overflow = TextOverflow.Ellipsis,
+            textAlign = TextAlign.Center,
+        )
+    }
+}
+
+
+@Preview(showBackground = true, showSystemUi = true)
 @Composable
 private fun DetailScreenPreview() {
     AnilistTheme(dynamicColor = false) {
@@ -409,29 +406,11 @@ private fun DetailScreenPreview() {
                     seasonYear = 2021,
                     trailer = null,
                     duration = 170,
-                    isAdult = true,
+                    isAdult = false,
                     countryOfOrigin = "JP",
                     characters = listOf(
-                        Character(
-                            id = 1, name = "Copy",
-                            imageUrl = "https://s4.anilist.co/file/anilistcdn/character/large/b270810-RDnZzM4DtLyn.png",
-                            role = "Main"
-                        ),
-                        Character(
-                            id = 1, name = "Copy",
-                            imageUrl = "https://s4.anilist.co/file/anilistcdn/character/large/b270810-RDnZzM4DtLyn.png",
-                            role = "Main"
-                        ),
-                        Character(
-                            id = 1, name = "Copy",
-                            imageUrl = "https://s4.anilist.co/file/anilistcdn/character/large/b270810-RDnZzM4DtLyn.png",
-                            role = "Main"
-                        ),
-                        Character(
-                            id = 1, name = "Copy",
-                            imageUrl = "https://s4.anilist.co/file/anilistcdn/character/large/b270810-RDnZzM4DtLyn.png",
-                            role = "Main"
-                        )
+                        Character(id = 1, name = "Spider-Man", imageUrl = "https://s4.anilist.co/file/anilistcdn/character/large/b270810-RDnZzM4DtLyn.png", role = "MAIN"),
+                        Character(id = 2, name = "Doctor Strange", imageUrl = "https://s4.anilist.co/file/anilistcdn/character/large/b270810-RDnZzM4DtLyn.png", role = "SUPPORTING"),
                     )
                 )
             ),
