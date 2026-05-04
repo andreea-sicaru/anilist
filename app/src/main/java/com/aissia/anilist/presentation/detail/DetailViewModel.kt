@@ -3,9 +3,7 @@ package com.aissia.anilist.presentation.detail
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.toRoute
 import com.aissia.anilist.domain.repository.AnimeRepository
-import com.aissia.anilist.presentation.navigation.DetailRoute
 import com.aissia.anilist.presentation.toErrorMessage
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -23,7 +21,10 @@ class DetailViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
-    private val animeId: Int = savedStateHandle.toRoute<DetailRoute>().animeId
+    // Navigation 2.8 serialises DetailRoute into SavedStateHandle as individual typed properties,
+    // so reading "animeId" directly is equivalent to toRoute<DetailRoute>().animeId and
+    // works in both production and JVM unit tests without requiring Android Bundle mocking.
+    private val animeId: Int = checkNotNull(savedStateHandle["animeId"])
 
     private val _state = MutableStateFlow(DetailContract.State())
     val state: StateFlow<DetailContract.State> = _state.asStateFlow()
