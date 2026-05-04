@@ -136,6 +136,8 @@ class AnimeRepositoryImpl @Inject constructor(
         trailer = trailer?.toTrailer(),
         status = status?.toDomainStatus(),
         seasonYear = seasonYear,
+        duration = duration,
+        isAdult = isAdult ?: false,
         countryOfOrigin = countryOfOrigin,
         characters = characters?.edges?.filterNotNull()?.mapNotNull { edge ->
             val node = edge.node ?: return@mapNotNull null

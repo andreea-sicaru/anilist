@@ -206,7 +206,8 @@ fun MetaRow(
         val duration = anime.duration?.toFormattedDuration()
         Meta(stringResource(R.string.meta_length), duration ?: stringResource(R.string.meta_unknown), modifier.weight(1f))
         Meta(stringResource(R.string.meta_language), anime.countryOfOrigin.toLanguage(), modifier.weight(1f))
-        Meta(stringResource(R.string.meta_rating), stringResource(R.string.meta_rating_value), modifier.weight(1f))
+        val rating = stringResource(if (anime.isAdult) R.string.meta_rating_r else R.string.meta_rating_pg13)
+        Meta(stringResource(R.string.meta_rating), rating, modifier.weight(1f))
     }
 
 }

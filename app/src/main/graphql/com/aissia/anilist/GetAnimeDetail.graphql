@@ -22,6 +22,8 @@ query GetAnimeDetail($id: Int) {
     }
     status
     seasonYear
+    duration
+    isAdult
     countryOfOrigin
     characters(perPage: 4, sort: [ROLE]) {
       edges {

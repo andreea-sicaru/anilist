@@ -12,7 +12,8 @@
     <string name="meta_length">Length</string>
     <string name="meta_language">Language</string>
     <string name="meta_rating">Rating</string>
-    <string name="meta_rating_value">PG-13</string>
+    <string name="meta_rating_pg13">PG-13</string>
+    <string name="meta_rating_r">R</string>
     <string name="meta_unknown">Unknown</string>
     <string name="play_trailer">Play Trailer</string>
 
