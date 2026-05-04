@@ -50,4 +50,8 @@ val fakeAnime = Anime(
     trailer = null,
     status = null,
     seasonYear = 2024,
+    duration = 24,
+    isAdult = false,
+    countryOfOrigin = "JP",
+    characters = emptyList(),
 )

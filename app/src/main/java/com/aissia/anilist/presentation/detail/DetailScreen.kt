@@ -383,6 +383,7 @@ private fun DetailScreenPreview() {
     AnilistTheme(dynamicColor = false) {
         DetailScreenContent(
             state = DetailContract.State(
+                isLoading = false,
                 anime = Anime(
                     id = 1,
                     title = "Spiderman: No Way Home : No Way Home",
@@ -398,6 +399,7 @@ private fun DetailScreenPreview() {
                     seasonYear = 2021,
                     trailer = null,
                     duration = 170,
+                    isAdult = true,
                     countryOfOrigin = "JP",
                     characters = listOf(
                         Character(
