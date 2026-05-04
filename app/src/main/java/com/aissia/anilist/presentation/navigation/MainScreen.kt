@@ -23,7 +23,10 @@ fun MainScreen() {
                 }
             )
         }
-    ) {
-        AppNavHost(navController = navController)
+    ) { paddingValues ->
+        AppNavHost(
+            navController = navController,
+            bottomBarHeight = paddingValues.calculateBottomPadding(),
+        )
     }
 }

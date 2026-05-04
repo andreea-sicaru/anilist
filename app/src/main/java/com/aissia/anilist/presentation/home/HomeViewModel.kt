@@ -40,14 +40,14 @@ class HomeViewModel @Inject constructor(
 
     private fun loadHomeData() {
         viewModelScope.launch {
-            _state.update { it.copy(homeSections = UiState.Loading) }
+            _state.update { it.copy(uiState = UiState.Loading) }
             repository.getHomeSections().fold(
                 onSuccess = { data ->
-                    _state.update { it.copy(homeSections = UiState.Success(data)) }
+                    _state.update { it.copy(uiState = UiState.Success(data)) }
                 },
                 onFailure = { e ->
                     val message = e.toErrorMessage()
-                    _state.update { it.copy(homeSections = UiState.Error(message)) }
+                    _state.update { it.copy(uiState = UiState.Error(message)) }
                     sendEffect(HomeContract.Effect.ShowError(message))
                 }
             )

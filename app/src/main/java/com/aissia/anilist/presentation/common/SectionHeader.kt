@@ -21,7 +21,7 @@ import com.aissia.anilist.presentation.theme.DarkBlue900
 import com.aissia.anilist.presentation.theme.LightGray80
 
 @Composable
-fun SectionHeader(title: String, onSeeMore: (() -> Unit)? = null, modifier: Modifier = Modifier) {
+fun SectionHeader(modifier: Modifier = Modifier, title: String, onSeeMore: (() -> Unit)? = null) {
     Row(
         modifier = modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,

@@ -42,7 +42,7 @@ class HomeViewModelTest {
         // Before construction, the default state is Loading
         // This verifies the contract's default
         val defaultState = HomeContract.State()
-        assertTrue(defaultState.homeSections is UiState.Loading)
+        assertTrue(defaultState.uiState is UiState.Loading)
     }
 
     @Test
@@ -56,8 +56,8 @@ class HomeViewModelTest {
         val viewModel = HomeViewModel(fakeRepo)
 
         val state = viewModel.state.value
-        assertTrue(state.homeSections is UiState.Success)
-        assertEquals(expected, (state.homeSections as UiState.Success).data)
+        assertTrue(state.uiState is UiState.Success)
+        assertEquals(expected, (state.uiState as UiState.Success).data)
     }
 
     @Test
@@ -67,23 +67,23 @@ class HomeViewModelTest {
         val viewModel = HomeViewModel(fakeRepo)
 
         val state = viewModel.state.value
-        assertTrue(state.homeSections is UiState.Error)
-        assertEquals("Network error", (state.homeSections as UiState.Error).message)
+        assertTrue(state.uiState is UiState.Error)
+        assertEquals("Network error", (state.uiState as UiState.Error).message)
     }
 
     @Test
     fun `retry reloads sections after failure`() = runTest {
         fakeRepo.homeSectionsResult = Result.failure(Exception("error"))
         val viewModel = HomeViewModel(fakeRepo)
-        assertTrue(viewModel.state.value.homeSections is UiState.Error)
+        assertTrue(viewModel.state.value.uiState is UiState.Error)
 
         val expected = HomeSections(nowShowing = listOf(fakeAnimePreview), popular = emptyList())
         fakeRepo.homeSectionsResult = Result.success(expected)
         viewModel.onEvent(HomeContract.Event.Retry)
 
         val state = viewModel.state.value
-        assertTrue(state.homeSections is UiState.Success)
-        assertEquals(expected, (state.homeSections as UiState.Success).data)
+        assertTrue(state.uiState is UiState.Success)
+        assertEquals(expected, (state.uiState as UiState.Success).data)
     }
 
     @Test
