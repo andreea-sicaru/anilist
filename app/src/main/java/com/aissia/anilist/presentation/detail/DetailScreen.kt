@@ -1,6 +1,7 @@
 package com.aissia.anilist.presentation.detail
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -20,6 +21,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Bookmark
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.outlined.BookmarkBorder
 import androidx.compose.material.icons.outlined.MoreHoriz
@@ -261,6 +263,8 @@ private fun PlayButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
 
 @Composable
 private fun DescriptionSection(anime: Anime, modifier: Modifier = Modifier) {
+    var isBookmarked by remember { mutableStateOf(false) }
+
     Row(
         modifier = modifier.fillMaxWidth(),
         verticalAlignment = Alignment.Top,
@@ -274,9 +278,10 @@ private fun DescriptionSection(anime: Anime, modifier: Modifier = Modifier) {
             modifier = Modifier.weight(1f),
         )
         Icon(
-            imageVector = Icons.Outlined.BookmarkBorder,
+            modifier = Modifier.clickable { isBookmarked = !isBookmarked },
+            imageVector = if (isBookmarked) Icons.Filled.Bookmark else Icons.Outlined.BookmarkBorder,
             contentDescription = stringResource(R.string.cd_bookmark),
-            modifier = Modifier.padding(top = 3.dp)
+            tint = if (isBookmarked) DarkBlue900 else MaterialTheme.colorScheme.onSurface,
         )
     }
 
