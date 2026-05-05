@@ -1,18 +1,16 @@
 package com.aissia.anilist.data.repository
 
+import com.aissia.anilist.data.toAnime
+import com.aissia.anilist.data.toAnimePreview
 import com.aissia.anilist.domain.model.Anime
 import com.aissia.anilist.domain.model.AnimePreview
-import com.aissia.anilist.domain.model.Character
 import com.aissia.anilist.domain.model.HomeSections
-import com.aissia.anilist.domain.model.MediaStatus
 import com.aissia.anilist.domain.model.PaginatedResult
-import com.aissia.anilist.domain.model.Trailer
 import com.aissia.anilist.domain.repository.AnimeRepository
 import com.aissia.anilist.graphql.GetAnimeDetailQuery
 import com.aissia.anilist.graphql.GetHomeSectionsQuery
 import com.aissia.anilist.graphql.GetNowShowingQuery
 import com.aissia.anilist.graphql.GetPopularAnimeQuery
-import com.aissia.anilist.graphql.type.MediaStatus as GraphQlMediaStatus
 import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.api.Optional
 import javax.inject.Inject
@@ -70,97 +68,5 @@ class AnimeRepositoryImpl @Inject constructor(
         ).execute()
         response.exception?.let { throw it }
         response.data?.Media?.toAnime() ?: error("Anime not found")
-    }
-
-    // --- Home data mappers ---
-
-    private fun GetHomeSectionsQuery.Medium.toAnimePreview() = AnimePreview(
-        id = id,
-        title = title?.english ?: title?.romaji ?: "Unknown",
-        coverImageLarge = coverImage?.large,
-        coverImageExtraLarge = coverImage?.extraLarge,
-        coverImageColor = coverImage?.color,
-        averageScore = averageScore?.div(10.0),
-        genres = genres?.filterNotNull() ?: emptyList(),
-        duration = duration,
-    )
-
-    private fun GetHomeSectionsQuery.Medium1.toAnimePreview() = AnimePreview(
-        id = id,
-        title = title?.english ?: title?.romaji ?: "Unknown",
-        coverImageLarge = coverImage?.large,
-        coverImageExtraLarge = coverImage?.extraLarge,
-        coverImageColor = coverImage?.color,
-        averageScore = averageScore?.div(10.0),
-        genres = genres?.filterNotNull() ?: emptyList(),
-        duration = duration,
-    )
-
-    // --- List mappers ---
-
-    private fun GetPopularAnimeQuery.Medium.toAnimePreview() = AnimePreview(
-        id = id,
-        title = title?.english ?: title?.romaji ?: "Unknown",
-        coverImageLarge = coverImage?.large,
-        coverImageExtraLarge = coverImage?.extraLarge,
-        coverImageColor = coverImage?.color,
-        averageScore = averageScore?.div(10.0),
-        genres = genres?.filterNotNull() ?: emptyList(),
-        duration = duration,
-    )
-
-    private fun GetNowShowingQuery.Medium.toAnimePreview() = AnimePreview(
-        id = id,
-        title = title?.english ?: title?.romaji ?: "Unknown",
-        coverImageLarge = coverImage?.large,
-        coverImageExtraLarge = coverImage?.extraLarge,
-        coverImageColor = coverImage?.color,
-        averageScore = averageScore?.div(10.0),
-        genres = genres?.filterNotNull() ?: emptyList(),
-        duration = duration,
-    )
-
-    // --- Detail mapper ---
-
-    private fun GetAnimeDetailQuery.Media.toAnime() = Anime(
-        id = id,
-        title = title?.english ?: title?.romaji ?: "Unknown",
-        coverImageLarge = coverImage?.large,
-        coverImageExtraLarge = coverImage?.extraLarge,
-        coverImageColor = coverImage?.color,
-        bannerImage = bannerImage,
-        averageScore = averageScore?.div(10.0),
-        popularity = popularity,
-        genres = genres?.filterNotNull() ?: emptyList(),
-        description = description?.stripHtml(),
-        trailer = trailer?.toTrailer(),
-        status = status?.toDomainStatus(),
-        seasonYear = seasonYear,
-        duration = duration,
-        isAdult = isAdult ?: false,
-        countryOfOrigin = countryOfOrigin,
-        characters = characters?.edges?.filterNotNull()?.mapNotNull { edge ->
-            val node = edge.node ?: return@mapNotNull null
-            Character(
-                id = node.id,
-                name = node.name?.full ?: return@mapNotNull null,
-                imageUrl = node.image?.large,
-                role = edge.role?.rawValue,
-            )
-        } ?: emptyList(),
-    )
-
-    private fun GetAnimeDetailQuery.Trailer.toTrailer() =
-        Trailer(id = id ?: "", site = site ?: "youtube", thumbnail = thumbnail)
-
-    private fun String.stripHtml(): String = replace(Regex("<[^>]++>"), "").trim()
-
-    private fun GraphQlMediaStatus.toDomainStatus(): MediaStatus = when (this) {
-        GraphQlMediaStatus.FINISHED -> MediaStatus.FINISHED
-        GraphQlMediaStatus.RELEASING -> MediaStatus.RELEASING
-        GraphQlMediaStatus.NOT_YET_RELEASED -> MediaStatus.NOT_YET_RELEASED
-        GraphQlMediaStatus.CANCELLED -> MediaStatus.CANCELLED
-        GraphQlMediaStatus.HIATUS -> MediaStatus.HIATUS
-        GraphQlMediaStatus.UNKNOWN__ -> MediaStatus.UNKNOWN
     }
 }
