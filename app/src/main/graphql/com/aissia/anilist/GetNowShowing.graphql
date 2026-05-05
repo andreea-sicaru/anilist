@@ -1,0 +1,23 @@
+query GetNowShowing($page: Int, $perPage: Int) {
+  Page(page: $page, perPage: $perPage) {
+    pageInfo {
+      hasNextPage
+      currentPage
+    }
+    media(type: ANIME, status: RELEASING, sort: [TRENDING_DESC]) {
+      id
+      title {
+        english
+        romaji
+      }
+      coverImage {
+        large
+        extraLarge
+        color
+      }
+      averageScore
+      genres
+      duration
+    }
+  }
+}

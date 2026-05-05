@@ -1,0 +1,36 @@
+query GetHomeSections {
+  nowShowing: Page(page: 1, perPage: 10) {
+    media(type: ANIME, status: RELEASING, sort: [TRENDING_DESC]) {
+      id
+      title {
+        english
+        romaji
+      }
+      coverImage {
+        large
+        extraLarge
+        color
+      }
+      averageScore
+      genres
+      duration
+    }
+  }
+  popular: Page(page: 1, perPage: 10) {
+    media(type: ANIME, sort: [POPULARITY_DESC]) {
+      id
+      title {
+        english
+        romaji
+      }
+      coverImage {
+        large
+        extraLarge
+        color
+      }
+      averageScore
+      genres
+      duration
+    }
+  }
+}

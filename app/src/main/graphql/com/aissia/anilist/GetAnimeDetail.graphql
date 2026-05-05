@@ -1,0 +1,43 @@
+query GetAnimeDetail($id: Int) {
+  Media(id: $id, type: ANIME) {
+    id
+    title {
+      english
+      romaji
+    }
+    coverImage {
+      large
+      extraLarge
+      color
+    }
+    bannerImage
+    averageScore
+    popularity
+    genres
+    description
+    trailer {
+      id
+      site
+      thumbnail
+    }
+    status
+    seasonYear
+    duration
+    isAdult
+    countryOfOrigin
+    characters(perPage: 4, sort: [ROLE]) {
+      edges {
+        node {
+          id
+          name {
+            full
+          }
+          image {
+            large
+          }
+        }
+        role
+      }
+    }
+  }
+}

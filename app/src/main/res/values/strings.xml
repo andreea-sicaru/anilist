@@ -1,3 +1,40 @@
 <resources>
-    <string name="app_name">Anilist</string>
+    <string name="app_name">FilmKu</string>
+
+    <!-- Home screen -->
+    <string name="section_now_showing">Now showing</string>
+    <string name="section_popular">Popular</string>
+    <string name="see_more">See more</string>
+
+    <!-- Detail screen -->
+    <string name="label_description">Description</string>
+    <string name="label_cast">Cast</string>
+    <string name="meta_length">Length</string>
+    <string name="meta_language">Language</string>
+    <string name="meta_rating">Rating</string>
+    <string name="meta_rating_pg13">PG-13</string>
+    <string name="meta_rating_r">R</string>
+    <string name="meta_unknown">Unknown</string>
+    <string name="play_trailer">Play Trailer</string>
+
+    <!-- Placeholder screens -->
+    <string name="tickets">Tickets</string>
+    <string name="saved">Saved</string>
+
+    <!-- Rating -->
+    <string name="imdb_rating">%s/10 IMDb</string>
+
+    <!-- Common -->
+    <string name="retry">Retry</string>
+
+    <!-- Content descriptions -->
+    <string name="cd_menu">Menu</string>
+    <string name="cd_notifications">Notifications</string>
+    <string name="cd_bookmark">Bookmark</string>
+    <string name="cd_back">Back</string>
+    <string name="cd_more">More</string>
+
+    <!-- Anime list screen titles -->
+    <string name="title_now_showing">Now Showing</string>
+    <string name="title_popular">Popular</string>
 </resources>
