@@ -27,7 +27,10 @@ fun AppNavHost(
             )
         }
         composable<DetailRoute> {
-            DetailScreen(onBack = { navController.popBackStack() })
+            DetailScreen(
+                onBack = { navController.popBackStack() },
+                bottomBarHeight = bottomBarHeight,
+            )
         }
         composable<AnimeListRoute> {
             AnimeListScreen(

@@ -5,8 +5,10 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
@@ -26,10 +28,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -47,6 +49,7 @@ import com.aissia.anilist.presentation.theme.AnilistTheme
 @Composable
 fun DetailScreen(
     onBack: () -> Unit,
+    bottomBarHeight: Dp = 0.dp,
     viewModel: DetailViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -61,6 +64,7 @@ fun DetailScreen(
 
     DetailScreenContent(
         state = state,
+        bottomBarHeight = bottomBarHeight,
         onBack = { viewModel.onEvent(DetailContract.Event.OnBackClicked) },
         onRetry = { viewModel.onEvent(DetailContract.Event.RetryLoad) },
     )
@@ -70,17 +74,18 @@ fun DetailScreen(
 fun DetailScreenContent(
     state: DetailContract.State,
     onBack: () -> Unit,
+    bottomBarHeight: Dp = 0.dp,
     onRetry: () -> Unit = {},
 ) {
     when (val detail = state.detail) {
         is UiState.Loading -> LoadingView(Modifier.fillMaxSize())
         is UiState.Error -> Box(Modifier.fillMaxSize(), Alignment.Center) { ErrorView(message = detail.message, onRetry = onRetry) }
-        is UiState.Success -> AnimeContent(anime = detail.data, onBack = onBack)
+        is UiState.Success -> AnimeContent(anime = detail.data, onBack = onBack, bottomBarHeight = bottomBarHeight)
     }
 }
 
 @Composable
-private fun AnimeContent(anime: Anime, onBack: () -> Unit) {
+private fun AnimeContent(anime: Anime, onBack: () -> Unit, bottomBarHeight: Dp = 0.dp) {
     Box(modifier = Modifier.fillMaxSize()) {
         Column(
             modifier = Modifier
@@ -100,6 +105,7 @@ private fun AnimeContent(anime: Anime, onBack: () -> Unit) {
             ) {
                 AnimeInfoSection(anime)
             }
+            Spacer(modifier = Modifier.height(bottomBarHeight))
         }
         DetailTopBar(onBack = onBack)
     }
@@ -107,15 +113,6 @@ private fun AnimeContent(anime: Anime, onBack: () -> Unit) {
 
 @Composable
 private fun DetailTopBar(onBack: () -> Unit) {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(
-                Brush.verticalGradient(
-                    colors = listOf(Color.Black.copy(alpha = 0.4f), Color.Transparent)
-                )
-            )
-    ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -140,7 +137,6 @@ private fun DetailTopBar(onBack: () -> Unit) {
                 )
             }
         }
-    }
 }
 
 @Preview(showBackground = true, showSystemUi = true)
