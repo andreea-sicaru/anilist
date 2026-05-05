@@ -27,8 +27,8 @@ import com.aissia.anilist.R
 import com.aissia.anilist.domain.model.AnimePreview
 import com.aissia.anilist.presentation.common.GenreChipList
 import com.aissia.anilist.presentation.common.RatingRow
-import com.aissia.anilist.presentation.toFormattedDuration
 import com.aissia.anilist.presentation.theme.Dimens
+import com.aissia.anilist.presentation.toFormattedDuration
 
 @Composable
 fun PopularAnimeCard(anime: AnimePreview, onAnimeClick: (Int) -> Unit, modifier: Modifier = Modifier) {

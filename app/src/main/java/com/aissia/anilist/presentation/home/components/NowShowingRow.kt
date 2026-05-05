@@ -19,14 +19,17 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.aissia.anilist.domain.model.AnimePreview
 import com.aissia.anilist.presentation.common.RatingRow
+import com.aissia.anilist.presentation.placeholder.PreviewData
+import com.aissia.anilist.presentation.theme.AnilistTheme
 import com.aissia.anilist.presentation.theme.Dimens
 
 @Composable
-fun NowShowingSection(animes: List<AnimePreview>, onAnimeClick: (Int) -> Unit, modifier: Modifier = Modifier) {
+fun NowShowingRow(animes: List<AnimePreview>, onAnimeClick: (Int) -> Unit, modifier: Modifier = Modifier) {
     Column(modifier = modifier) {
         LazyRow(
             contentPadding = PaddingValues(horizontal = Dimens.PaddingLarge),
@@ -49,7 +52,11 @@ fun NowShowingCard(anime: AnimePreview, onClick: () -> Unit, modifier: Modifier 
             onClick = onClick,
             modifier = Modifier
                 .size(width = Dimens.NowShowingCardWidth, height = Dimens.NowShowingCardHeight)
-                .shadow(elevation = 8.dp, shape = RoundedCornerShape(Dimens.RadiusMedium), clip = false),
+                .shadow(
+                    elevation = 8.dp,
+                    shape = RoundedCornerShape(Dimens.RadiusMedium),
+                    clip = false
+                ),
             shape = RoundedCornerShape(Dimens.RadiusMedium),
             colors = CardDefaults.cardColors(containerColor = Color.LightGray)
         ) {
@@ -70,5 +77,16 @@ fun NowShowingCard(anime: AnimePreview, onClick: () -> Unit, modifier: Modifier 
         anime.averageScore?.let { score ->
             RatingRow(score = score)
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun NowShowingRowPreview() {
+    AnilistTheme {
+        NowShowingRow(
+            animes = PreviewData.animePreviewList,
+            onAnimeClick = {}
+        )
     }
 }

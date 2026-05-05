@@ -7,7 +7,7 @@ import com.aissia.anilist.presentation.animelist.AnimeListType
 object HomeContract {
 
     data class State(
-        val homeSections: UiState<HomeSections> = UiState.Loading,
+        val uiState: UiState<HomeSections> = UiState.Loading,
     )
 
     sealed class Event {

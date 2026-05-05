@@ -11,7 +11,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.aissia.anilist.R
 import com.aissia.anilist.presentation.theme.GoldStar
 import com.aissia.anilist.presentation.theme.LightGray100
 
@@ -29,7 +31,7 @@ fun RatingRow(score: Double, modifier: Modifier = Modifier) {
             modifier = Modifier.size(16.dp)
         )
         Text(
-            text = "${"%.1f".format(score)}/10 IMDb",
+            text = stringResource(R.string.imdb_rating, "%.1f".format(score)),
             style = MaterialTheme.typography.labelMedium,
             color = LightGray100
         )

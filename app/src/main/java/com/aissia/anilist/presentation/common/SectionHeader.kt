@@ -1,4 +1,4 @@
-package com.aissia.anilist.presentation.home.components
+package com.aissia.anilist.presentation.common
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
@@ -14,12 +14,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.aissia.anilist.R
 import com.aissia.anilist.presentation.theme.DarkBlue900
 import com.aissia.anilist.presentation.theme.LightGray80
 
 @Composable
-fun SectionHeader(title: String, onSeeMore: (() -> Unit)? = null, modifier: Modifier = Modifier) {
+fun SectionHeader(modifier: Modifier = Modifier, title: String, onSeeMore: (() -> Unit)? = null) {
     Row(
         modifier = modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -39,7 +41,7 @@ fun SectionHeader(title: String, onSeeMore: (() -> Unit)? = null, modifier: Modi
                 shape = RoundedCornerShape(16.dp)
             ) {
                 Text(
-                    text = "See more",
+                    text = stringResource(R.string.see_more),
                     style = MaterialTheme.typography.labelSmall,
                     color = LightGray80
                 )

@@ -27,11 +27,14 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.res.stringResource
+import com.aissia.anilist.R
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.aissia.anilist.presentation.UiState
 import com.aissia.anilist.presentation.common.ErrorView
+import com.aissia.anilist.presentation.common.LoadingView
 import com.aissia.anilist.presentation.home.components.PopularAnimeCard
 import com.aissia.anilist.presentation.theme.Dimens
 
@@ -72,7 +75,13 @@ fun AnimeListScreen(
         topBar = {
             CenterAlignedTopAppBar(
                 title = {
-                    Text(text = state.title, style = MaterialTheme.typography.titleMedium)
+                    val title = stringResource(
+                        when (state.listType) {
+                            AnimeListType.NOW_SHOWING -> R.string.title_now_showing
+                            AnimeListType.POPULAR -> R.string.title_popular
+                        }
+                    )
+                    Text(text = title, style = MaterialTheme.typography.titleMedium)
                 },
                 navigationIcon = {
                     IconButton(onClick = { viewModel.onEvent(AnimeListContract.Event.OnBackClicked) }) {
@@ -94,10 +103,7 @@ fun AnimeListScreen(
         ) {
             when (val items = state.items) {
                 is UiState.Loading -> item {
-                    Box(
-                        modifier = Modifier.fillMaxWidth().height(Dimens.SpacingExtraLarge * 5),
-                        contentAlignment = Alignment.Center
-                    ) { CircularProgressIndicator() }
+                    LoadingView(Modifier.fillMaxWidth().height(Dimens.SpacingExtraLarge * 5))
                 }
 
                 is UiState.Error -> item {
